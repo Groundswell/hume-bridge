@@ -27,14 +27,16 @@ class DataPoint < ActiveRecord::Base
 	def acceleration_vector_angle_zaxis
 		# to_degrees( Math.asin( acceleration_xaxis / acceleration_vector_length.to_f ) )
 		angle = to_degrees( Math.atan2( acceleration_xaxis, acceleration_yaxis ) )
-		# if acceleration_yaxis > 0
-		# 	angle = angle - 90
-		# 	angle = 360 + angle if angle < -180
-		# else
-		# 	angle = angle + 90
-		# 	angle = -360 + angle if angle > 180
-		# end
-		# angle
+		if acceleration_xaxis > 0
+			angle = angle + 45
+			angle = -360 + angle if angle > 180
+		else
+			angle = angle - 45
+			angle = 360 + angle if angle < 180
+		end
+
+		angle
+
 	end
 
 	def to_radians( degrees )
