@@ -11,7 +11,7 @@ class DataPoint < ActiveRecord::Base
 
 	def acceleration_vector_angle_yaxis
 		# to_degrees( Math.asin( acceleration_yaxis / acceleration_vector_length.to_f ) )
-		-to_degrees( Math.atan2( acceleration_xaxis, acceleration_zaxis ) )
+		to_degrees( Math.atan2( acceleration_zaxis, acceleration_xaxis ) )
 	end
 
 	def acceleration_vector_angle_zaxis
