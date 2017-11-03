@@ -28,7 +28,9 @@ class DataPoint < ActiveRecord::Base
 	end
 
 	def compare_angles
-		puts "#{self.acceleration_vector_angle_xaxis},#{self.acceleration_vector_angle_yaxis},#{self.acceleration_vector_angle_zaxis} vs #{self.angle_xaxis},#{self.angle_yaxis},#{self.angle_zaxis}"
+		puts "#{self.acceleration_vector_angle_xaxis},#{self.acceleration_vector_angle_yaxis},#{self.acceleration_vector_angle_zaxis}"
+		puts "#{self.angle_xaxis},#{self.angle_yaxis},#{self.angle_zaxis}"
+		puts "#{self.angle_xaxis - self.acceleration_vector_angle_xaxis},#{self.angle_yaxis - self.acceleration_vector_angle_yaxis},#{self.angle_zaxis - self.acceleration_vector_angle_zaxis}"
 	end
 
 end
