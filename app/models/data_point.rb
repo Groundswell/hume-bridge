@@ -6,17 +6,17 @@ class DataPoint < ActiveRecord::Base
 
 	def acceleration_vector_angle_xaxis
 		# to_degrees( Math.asin( acceleration_yaxis / acceleration_vector_length.to_f ) )
-		to_degrees( Math.atan2( acceleration_zaxis, acceleration_yaxis ) )
+		to_degrees( Math.atan2( acceleration_yaxis, acceleration_zaxis ) )
 	end
 
 	def acceleration_vector_angle_yaxis
 		# to_degrees( Math.asin( acceleration_yaxis / acceleration_vector_length.to_f ) )
-		to_degrees( Math.atan2( acceleration_xaxis, acceleration_zaxis ) )
+		-to_degrees( Math.atan2( acceleration_xaxis, acceleration_zaxis ) )
 	end
 
 	def acceleration_vector_angle_zaxis
 		# to_degrees( Math.asin( acceleration_xaxis / acceleration_vector_length.to_f ) )
-		to_degrees( Math.atan2( acceleration_xaxis, acceleration_yaxis ) )
+		to_degrees( Math.atan2( acceleration_yaxis, acceleration_xaxis ) )
 	end
 
 	def to_radians( degrees )
@@ -24,7 +24,7 @@ class DataPoint < ActiveRecord::Base
 	end
 
 	def to_degrees( radians )
-		radians / Math::PI * 180
+		radians * (180/Math::PI)
 	end
 
 	def compare_angles
