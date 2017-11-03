@@ -11,9 +11,10 @@ class DataPoint < ActiveRecord::Base
 
 	def acceleration_vector_angle_yaxis
 		# to_degrees( Math.asin( acceleration_yaxis / acceleration_vector_length.to_f ) )
-		angle = to_degrees( Math.atan2( acceleration_zaxis, acceleration_xaxis ) ) - 90
-		angle = (angle + 180).abs if angle < -180
-		angle
+		# angle = to_degrees( Math.atan2( acceleration_zaxis, acceleration_xaxis ) ) - 90
+		# angle = (angle + 180).abs if angle < -180
+		# angle
+		to_degrees( Math.atan2( acceleration_xaxis, acceleration_zaxis ) )
 	end
 
 	def acceleration_vector_angle_zaxis
