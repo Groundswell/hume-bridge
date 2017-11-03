@@ -31,8 +31,8 @@ class DataPoint < ActiveRecord::Base
 			angle = angle - 45
 			angle = 360 + angle if angle < 180
 		else
-			angle = angle + 135
-			angle = -360 + angle if angle > 180
+			# angle = angle + 135
+			# angle = -360 + angle if angle > 180
 		end
 		angle
 
