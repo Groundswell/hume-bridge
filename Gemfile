@@ -42,6 +42,7 @@ gem 'jbuilder', '~> 2.5'
 
 
 
+gem 'acts-as-taggable-array-on'
 gem 'newrelic_rpm'
 
 

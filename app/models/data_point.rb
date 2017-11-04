@@ -1,13 +1,16 @@
-class DataPoint < ActiveRecord::Base
-	# X - Roll - φ
-	# Y - Pitch - θ
-	# Z - Yaw - ψ
+# X - Roll - φ
+# Y - Pitch - θ
+# Z - Yaw - ψ
 
-	# accelleration:
-	# acc_x = 1g * sinθ * cosφ
-    # acc_y = - 1g * sinθ * sinφ
-    # acc_z = 1g * cosθ
-	# → acc_y/acc_x = - tanφ
+# accelleration:
+# acc_x = 1g * sinθ * cosφ
+# acc_y = - 1g * sinθ * sinφ
+# acc_z = 1g * cosθ
+# → acc_y/acc_x = - tanφ
+
+class DataPoint < ActiveRecord::Base
+
+	acts_as_taggable_array_on :tags
 
 	def acceleration_vector_length
 		Math.sqrt( acceleration_xaxis**2 + acceleration_yaxis**2 + acceleration_zaxis**2 )
