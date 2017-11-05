@@ -10,7 +10,7 @@ json.array!(@data_points.to_a) do |data_point|
 	json.acceleration_xaxis data_point.acceleration_xaxis
 	json.acceleration_yaxis data_point.acceleration_yaxis
 	json.acceleration_zaxis data_point.acceleration_zaxis
-	json.acceleration_magnitude data_point.acceleration_vector_length,
+	json.acceleration_magnitude data_point.acceleration_vector_length
 
 	json.angular_velocity_xaxis data_point.angular_velocity_xaxis
 	json.angular_velocity_yaxis data_point.angular_velocity_yaxis
@@ -22,8 +22,8 @@ json.array!(@data_points.to_a) do |data_point|
 
 	json.raw_data data_point.raw_data
 
-	json.acceleration_minus_gravity_xaxis data_point.corrected_acceleration_xaxis,
-	json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis,
-	json.acceleration_minus_gravity_zaxis data_point.corrected_acceleration_zaxis,
-	json.acceleration_minus_gravity_magnitude data_point.corrected_acceleration_vector_length,
+	json.acceleration_minus_gravity_xaxis data_point.corrected_acceleration_xaxis
+	json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis
+	json.acceleration_minus_gravity_zaxis data_point.corrected_acceleration_zaxis
+	json.acceleration_minus_gravity_magnitude data_point.corrected_acceleration_vector_length
 end
