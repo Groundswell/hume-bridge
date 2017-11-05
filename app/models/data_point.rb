@@ -12,10 +12,6 @@ class DataPoint < ActiveRecord::Base
 
 	acts_as_taggable_array_on :tags
 
-	def acceleration_vector_length
-		Math.sqrt( acceleration_xaxis**2 + acceleration_yaxis**2 + acceleration_zaxis**2 )
-	end
-
 	def delta_antigravity
 		{ xaxis: -angle_xaxis+90, yaxis: -angle_yaxis, zaxis: angle_zaxis }
 	end
@@ -25,34 +21,34 @@ class DataPoint < ActiveRecord::Base
 	end
 
 	# angle 1g acceleration
-	def angle_1g_acceleration_xaxis
-		Math.sin(angle_yaxis) * Math.cos(angle_xaxis) # acc_x = 1g * sinθ * cosφ
+	def angle_acceleration_xaxis
+		Math.sin(to_radians(angle_yaxis)) * Math.cos(to_radians(angle_xaxis)) # acc_x = 1g * sinθ * cosφ
 	end
 
-	def angle_1g_acceleration_yaxis
-		- Math.sin(angle_yaxis) * Math.sin(angle_xaxis) # acc_y = - 1g * sinθ * sinφ
+	def angle_acceleration_yaxis
+		- Math.sin(to_radians(angle_yaxis)) * Math.sin(to_radians(angle_xaxis)) # acc_y = - 1g * sinθ * sinφ
 	end
 
-	def angle_1g_acceleration_zaxis
-		Math.cos(angle_yaxis) # acc_z = 1g * cosθ
+	def angle_acceleration_zaxis
+		Math.cos(to_radians(angle_yaxis)) # acc_z = 1g * cosθ
 	end
 
-	def angle_1g_acceleration_vector_length
-		Math.sqrt( angle_1g_acceleration_xaxis**2 + angle_1g_acceleration_yaxis**2 + angle_1g_acceleration_zaxis**2 )
+	def angle_acceleration_vector_length
+		Math.sqrt( angle_acceleration_xaxis**2 + angle_acceleration_yaxis**2 + angle_acceleration_zaxis**2 )
 	end
 
 
 	# gravity vector calculations
 	def gravity_acceleration_xaxis
-		Math.sin(delta_gravity[:yaxis]) * Math.cos(delta_gravity[:xaxis])
+		Math.sin(to_radians(delta_gravity[:yaxis])) * Math.cos(to_radians(delta_gravity[:xaxis]))
 	end
 
 	def gravity_acceleration_yaxis
-		- Math.sin(delta_gravity[:yaxis]) * Math.sin(delta_gravity[:xaxis])
+		- Math.sin(to_radians(delta_gravity[:yaxis])) * Math.sin(to_radians(delta_gravity[:xaxis]))
 	end
 
 	def gravity_acceleration_zaxis
-		Math.cos(delta_gravity[:yaxis])
+		Math.cos(to_radians(delta_gravity[:yaxis]))
 	end
 
 	def gravity_acceleration_vector_length
@@ -60,23 +56,22 @@ class DataPoint < ActiveRecord::Base
 	end
 
 
-	# antigravity vector calculations
-	def antigravity_acceleration_xaxis
-		Math.sin(delta_antigravity[:yaxis]) * Math.cos(delta_antigravity[:xaxis])
+	# corrected vector calculations
+	def corrected_acceleration_xaxis
+		acceleration_xaxis - gravity_acceleration_xaxis
 	end
 
-	def antigravity_acceleration_yaxis
-		- Math.sin(delta_antigravity[:yaxis]) * Math.sin(delta_antigravity[:xaxis])
+	def corrected_acceleration_yaxis
+		acceleration_yaxis - gravity_acceleration_yaxis
 	end
 
-	def antigravity_acceleration_zaxis
-		Math.cos(delta_antigravity[:yaxis])
+	def corrected_acceleration_zaxis
+		acceleration_zaxis - gravity_acceleration_zaxis
 	end
 
-	def antigravity_acceleration_vector_length
-		Math.sqrt( antigravity_acceleration_xaxis**2 + antigravity_acceleration_yaxis**2 + antigravity_acceleration_zaxis**2 )
+	def corrected_acceleration_vector_length
+		Math.sqrt( corrected_acceleration_xaxis**2 + corrected_acceleration_yaxis**2 + corrected_acceleration_zaxis**2 )
 	end
-
 
 
 
@@ -105,6 +100,14 @@ class DataPoint < ActiveRecord::Base
 		to_degrees( Math.atan2( acceleration_yaxis, acceleration_zaxis ) )
 	end
 
+	def acceleration_vector_length
+		Math.sqrt( acceleration_xaxis**2 + acceleration_yaxis**2 + acceleration_zaxis**2 )
+	end
+
+
+
+
+
 
 	# helper fucntions
 	def to_radians( degrees )
@@ -117,26 +120,29 @@ class DataPoint < ActiveRecord::Base
 
 	def to_s
 		JSON.pretty_generate( self.attributes.merge(
-			acceleration_vector_angle_xaxis: self.acceleration_vector_angle_xaxis,
-			acceleration_vector_angle_yaxis: self.acceleration_vector_angle_yaxis,
-			acceleration_vector_angle_zaxis: self.acceleration_vector_angle_zaxis,
+			acceleration_vector_length: self.acceleration_vector_length,
 
-			delta_antigravity: delta_antigravity,
-			antigravity_acceleration_xaxis: self.antigravity_acceleration_xaxis,
-			antigravity_acceleration_yaxis: self.antigravity_acceleration_yaxis,
-			antigravity_acceleration_zaxis: self.antigravity_acceleration_zaxis,
-			antigravity_acceleration_vector_length: self.antigravity_acceleration_vector_length,
+			# acceleration_vector_angle_xaxis: self.acceleration_vector_angle_xaxis,
+			# acceleration_vector_angle_yaxis: self.acceleration_vector_angle_yaxis,
+			# acceleration_vector_angle_zaxis: self.acceleration_vector_angle_zaxis,
 
-			delta_gravity: delta_gravity,
+			gravity_acceleration: '-----------------',
 			gravity_acceleration_xaxis: self.gravity_acceleration_xaxis,
 			gravity_acceleration_yaxis: self.gravity_acceleration_yaxis,
 			gravity_acceleration_zaxis: self.gravity_acceleration_zaxis,
 			gravity_acceleration_vector_length: self.gravity_acceleration_vector_length,
 
-			angle_1g_acceleration_xaxis: self.angle_1g_acceleration_xaxis,
-			angle_1g_acceleration_yaxis: self.angle_1g_acceleration_yaxis,
-			angle_1g_acceleration_zaxis: self.angle_1g_acceleration_zaxis,
-			angle_1g_acceleration_vector_length: self.angle_1g_acceleration_vector_length,
+			corrected_acceleration: '-----------------',
+			corrected_acceleration_xaxis: self.corrected_acceleration_xaxis,
+			corrected_acceleration_yaxis: self.corrected_acceleration_yaxis,
+			corrected_acceleration_zaxis: self.corrected_acceleration_zaxis,
+			corrected_acceleration_vector_length: self.corrected_acceleration_vector_length,
+
+			angle_acceleration: '-----------------',
+			angle_acceleration_xaxis: self.angle_acceleration_xaxis,
+			angle_acceleration_yaxis: self.angle_acceleration_yaxis,
+			angle_acceleration_zaxis: self.angle_acceleration_zaxis,
+			angle_acceleration_vector_length: self.angle_acceleration_vector_length,
 		) )
 	end
 
