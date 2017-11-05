@@ -21,6 +21,10 @@ class DataController < ActionController::Base
 	def index
 		last_index = params[:since] || DataPoint.order(id: :desc).offset(500).pluck(:id).first || 0
 
+		last_data_point = DataPoint.last
+		@seconds_per_datapoint = 6
+		@seconds_per_datapoint = ( 60.0 / DataPoint.where( created_at: last_data_point.created_at - 1.minute..last_data_point.created_at ).count ).round if last_data_point.present?
+
 		@data_points = DataPoint.where( 'id > ?', last_index ).order( id: :asc ).limit(500)
 
 		render layout: false, status: 200

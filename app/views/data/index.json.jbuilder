@@ -1,4 +1,8 @@
 json.array!(@data_points.to_a) do |data_point|
+	@accumulated_acceleration_x = ( @accumulated_acceleration_x || params[:accumulated_acceleration_x] || 0 ).to_i + data_point.corrected_acceleration_xaxis
+	@accumulated_acceleration_y = ( @accumulated_acceleration_y || params[:accumulated_acceleration_y] || 0 ).to_i + data_point.corrected_acceleration_yaxis
+	@accumulated_acceleration_z = ( @accumulated_acceleration_z || params[:accumulated_acceleration_z] || 0 ).to_i + data_point.corrected_acceleration_zaxis
+
 	json.id data_point.id
 
 	json.device_id data_point.device_id
@@ -26,4 +30,8 @@ json.array!(@data_points.to_a) do |data_point|
 	json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis
 	json.acceleration_minus_gravity_zaxis data_point.corrected_acceleration_zaxis
 	json.acceleration_minus_gravity_magnitude data_point.corrected_acceleration_vector_length
+
+	json.accumulated_acceleration_x @accumulated_acceleration_x
+	json.accumulated_acceleration_y @accumulated_acceleration_y
+	json.accumulated_acceleration_z @accumulated_acceleration_z
 end
