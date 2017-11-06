@@ -10,7 +10,7 @@
 			}
 			.grid {
 				position: absolute;
-				top: 50vh;
+				top: 0;
 				left: 50vw;
 				height: 50vh;
 				width: 50vw;
@@ -32,14 +32,14 @@
 				- @accumulated_acceleration_y = ( @accumulated_acceleration_y || params[:accumulated_acceleration_y] || 0 ).to_i + data_point.corrected_acceleration_yaxis
 				- @accumulated_acceleration_z = ( @accumulated_acceleration_z || params[:accumulated_acceleration_z] || 0 ).to_i + data_point.corrected_acceleration_zaxis
 				- if params[:dims] == 'x,z'
-					.circle{ style: "top: #{@accumulated_acceleration_x*10}px;left:#{@accumulated_acceleration_z*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
 				- elsif params[:dims] == 'z,x'
-					.circle{ style: "top: #{@accumulated_acceleration_z*10}px;left:#{@accumulated_acceleration_x*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
 				- elsif params[:dims] == 'y,z'
-					.circle{ style: "top: #{@accumulated_acceleration_y*10}px;left:#{@accumulated_acceleration_z*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
 				- elsif params[:dims] == 'z,y'
-					.circle{ style: "top: #{@accumulated_acceleration_z*10}px;left:#{@accumulated_acceleration_y*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
 				- elsif params[:dims] == 'y,x'
-					.circle{ style: "top: #{@accumulated_acceleration_y*10}px;left:#{@accumulated_acceleration_x*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
-				- else
-					.circle{ style: "top: #{@accumulated_acceleration_x*10}px;left:#{@accumulated_acceleration_y*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
+				- else #params[:dims] == 'x,y'
+					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
