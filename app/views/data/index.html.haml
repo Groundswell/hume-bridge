@@ -33,7 +33,7 @@
 
 				- bg_blue = 0
 				- bg_green = 0
-				- bg_red = (index / 5.0).floor
+				- bg_red = (index / 4.0).floor
 
 				- if params[:dims] == 'x,z'
 					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
