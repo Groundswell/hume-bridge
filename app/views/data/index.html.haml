@@ -25,9 +25,11 @@
 			}
 	%body
 		%div.grid
+			- @color = [ 0,0,0 ]
 			- @data_points.to_a.each do |data_point|
+				- ( @color[0] < 255 ? @color[0] += 1 : ( @color[1] < 255 ? @color[1] += 1 : @color[2] += 1 ) )
 				- @accumulated_acceleration_x = ( @accumulated_acceleration_x || params[:accumulated_acceleration_x] || 0 ).to_i + data_point.corrected_acceleration_xaxis
 				- @accumulated_acceleration_y = ( @accumulated_acceleration_y || params[:accumulated_acceleration_y] || 0 ).to_i + data_point.corrected_acceleration_yaxis
 				- @accumulated_acceleration_z = ( @accumulated_acceleration_z || params[:accumulated_acceleration_z] || 0 ).to_i + data_point.corrected_acceleration_zaxis
 
-				.circle{ style: "top: #{@accumulated_acceleration_x*10}px;left:#{@accumulated_acceleration_y*10}px" }><
+				.circle{ style: "top: #{@accumulated_acceleration_x*10}px;left:#{@accumulated_acceleration_y*10}px;background: rgb( #{@color[0]}, #{@color[1]}, #{@color[2]} )" }><
