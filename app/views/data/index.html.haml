@@ -33,12 +33,12 @@
 				- if params[:dims] == 'x,z'
 					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
 				- elsif params[:dims] == 'z,x'
-					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
+					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
 				- elsif params[:dims] == 'y,z'
-					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
+					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
 				- elsif params[:dims] == 'z,y'
-					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
+					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
 				- elsif params[:dims] == 'y,x'
-					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
+					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
 				- else #params[:dims] == 'x,y'
-					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
+					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
