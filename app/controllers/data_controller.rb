@@ -28,7 +28,7 @@ class DataController < ActionController::Base
 		# @seconds_per_datapoint = ( 60.0 / DataPoint.where( created_at: last_data_point.created_at - 1.minute..last_data_point.created_at ).count ).round if last_data_point.present?
 
 		@data_points = DataPoint.where( 'id > ?', last_index )
-		@data_points = @data_points.with_all_tags( params[:tags] ) if params[:tags].present?
+		@data_points = @data_points.with_any_tags( params[:tags] ) if params[:tags].present?
 		@data_points = @data_points.where( tags: '{}' ) if params[:no_tags].present?
 		@data_points = @data_points.order( id: :asc ).limit(@limit)
 
