@@ -13,7 +13,7 @@ class DataPoint < ActiveRecord::Base
 	acts_as_taggable_array_on :tags
 
 	def self.tag_new_with( tags = [] )
-		self.all.where( tags: '{}' ).where( 'created_at < ?', Time.now ).for_each do |data_point|
+		self.all.where( tags: '{}' ).where( 'created_at < ?', Time.now ).find_each do |data_point|
 			data_point.update( tags: tags )
 		end
 	end
