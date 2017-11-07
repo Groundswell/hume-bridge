@@ -25,25 +25,20 @@
 			}
 	%body
 		%div.grid
-			- @color = [ 0,0,0 ]
 			- @data_points.to_a.each_with_index do |data_point,index|
 				- @accumulated_acceleration_x = ( @accumulated_acceleration_x || params[:accumulated_acceleration_x] || 0 ).to_i + data_point.corrected_acceleration_xaxis
 				- @accumulated_acceleration_y = ( @accumulated_acceleration_y || params[:accumulated_acceleration_y] || 0 ).to_i + data_point.corrected_acceleration_yaxis
 				- @accumulated_acceleration_z = ( @accumulated_acceleration_z || params[:accumulated_acceleration_z] || 0 ).to_i + data_point.corrected_acceleration_zaxis
 
-				- bg_blue = 0
-				- bg_green = 0
-				- bg_red = (index / 4.0).floor
-
 				- if params[:dims] == 'x,z'
-					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb(#{color_from_integer(index).join(',')})" }><
 				- elsif params[:dims] == 'z,x'
-					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
 				- elsif params[:dims] == 'y,z'
-					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_z*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
 				- elsif params[:dims] == 'z,y'
-					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_z*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
 				- elsif params[:dims] == 'y,x'
-					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_y*10}px;bottom: #{@accumulated_acceleration_x*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
 				- else #params[:dims] == 'x,y'
-					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb( #{bg_red}, #{bg_green}, #{bg_blue} )" }><
+					.circle{ style: "left:#{@accumulated_acceleration_x*10}px;bottom: #{@accumulated_acceleration_y*10}px;background: rgb(#{color_from_integer(index).join(',')}}><
