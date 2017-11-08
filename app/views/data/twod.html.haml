@@ -98,13 +98,13 @@
 					console.log(data)
 					$(data).each(function(index,data_point){
 
-						var last_left_acceleration    = Math.round( ( last_data_point || data_point )[ dims[0] ] * 100 ) / 100.0
-						var last_bottom_acceleration  = Math.round( ( last_data_point || data_point )[ dims[1] ] * 100 ) / 100.0
-						var this_left_acceleration    = Math.round( data_point[ dims[0] ] * 100 ) / 100.0
-						var this_bottom_acceleration  = Math.round( data_point[ dims[1] ] * 100 ) / 100.0
+						var last_left_acceleration    = ( last_data_point || data_point )[ dims[0] ]
+						var last_bottom_acceleration  = ( last_data_point || data_point )[ dims[1] ]
+						var this_left_acceleration    = data_point[ dims[0] ]
+						var this_bottom_acceleration  = data_point[ dims[1] ]
 
-						var delta_left_acceleration   = this_left_acceleration - last_left_acceleration
-						var delta_bottom_acceleration = this_bottom_acceleration - last_bottom_acceleration
+						var delta_left_acceleration   = Math.round( ( this_left_acceleration - last_left_acceleration ) * 100 ) / 100.0
+						var delta_bottom_acceleration = Math.round( ( this_bottom_acceleration - last_bottom_acceleration ) * 100 ) / 100.0
 
 						left_acceleration	+= delta_left_acceleration
 						bottom_acceleration	+= delta_bottom_acceleration
@@ -120,8 +120,10 @@
 						table_row = $('<tr></tr>')
 						table_row.append('<td>'+last_left_acceleration+'</td>')
 						table_row.append('<td>'+last_bottom_acceleration+'</td>')
-						table_row.append('<td>'+data_point[ dims[0] ]+'</td>')
-						table_row.append('<td>'+data_point[ dims[1] ]+'</td>')
+						table_row.append('<td>'+this_left_acceleration+'</td>')
+						table_row.append('<td>'+this_bottom_acceleration+'</td>')
+						table_row.append('<td>'+delta_left_acceleration+'</td>')
+						table_row.append('<td>'+delta_bottom_acceleration+'</td>')
 						table_row.append('<td>'+left_acceleration+'</td>')
 						table_row.append('<td>'+bottom_acceleration+'</td>')
 						table_row.append('<td>'+left_velocity+'</td>')
