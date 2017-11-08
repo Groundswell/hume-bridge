@@ -68,11 +68,11 @@
 				var dims = [ 'accumulated_acceleration_#{(params[:dims]||'x,y').split(',').first}', 'accumulated_acceleration_#{(params[:dims]||'x,y').split(',').last}' ]
 				var left_position = 0;
 				var bottom_position = 0;
-				$.getJSON( "/data.json", function( data ) {
+				$.getJSON( "#{raw data_path( params.permit( :dims, :limit ).merge( format: :json, tags: params[:tags] ) )}", function( data ) {
 					console.log(data)
 					$(data).each(function(index,value){
-						left_position += value[ dims[0] ] * 20
-						bottom_position += value[ dims[1] ] * 20
+						left_position += value[ dims[0] ] * 10
+						bottom_position += value[ dims[1] ] * 10
 
 						var left = left_position;
 						var bottom = bottom_position;
