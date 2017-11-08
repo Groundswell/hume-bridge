@@ -102,8 +102,8 @@
 						// left_position += left_velocity * 10
 						// bottom_position += bottom_velocity * 10
 
-						left_position += delta_left_acceleration * seconds_per * seconds_per * 1000
-						bottom_position += delta_bottom_acceleration * seconds_per * seconds_per * 1000
+						left_position   += delta_left_acceleration * 100
+						bottom_position += delta_bottom_acceleration * 100
 
 						render_data_point( data_point, left_position, bottom_position, (index * seconds_per * 1000), color_from_integer(index) )
 
