@@ -63,6 +63,12 @@
 				return "rgb("+r+","+g+","+b+")"
 			}
 
+			function render_data_point( data_point, left, bottom ) {
+				setTimeout(function(){
+					$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
+				}, index * (1000 / 8))
+			}
+
 			function render_data() {
 				$('.grid').html('')
 				var dims = [ 'acceleration_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_#{(params[:dims]||'x,y').split(',').last}axis' ]
@@ -78,13 +84,7 @@
 						left_position += delta_left_position * 100
 						bottom_position += delta_bottom_position * 100
 
-						var left = left_position;
-						var bottom = bottom_position;
-
-						$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
-						//setTimeout(function(){
-						//	$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
-						//}, index * (1000 / 8))
+						render_data_point( data_point, left_position, bottom_position )
 
 						last_data_point = data_point
 
