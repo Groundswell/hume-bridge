@@ -74,8 +74,19 @@
 			function render_data() {
 				$('.grid').html('')
 				var dims = [ 'acceleration_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_#{(params[:dims]||'x,y').split(',').last}axis' ]
+
+				var per_second = 8
+				var seconds_per = 1 / per_second
+
+				var left_acceleration = 0;
+				var bottom_acceleration = 0;
+
+				var left_velocity = 0
+				var bottom_velocity = 0
+
 				var left_position = 0;
 				var bottom_position = 0;
+
 				var last_data_point = null;
 				$.getJSON( "#{raw data_path( params.permit( :dims, :limit ).merge( format: :json, tags: params[:tags] ) )}", function( data ) {
 					console.log(data)
@@ -83,10 +94,18 @@
 						var delta_left_position   = data_point[ dims[0] ] - ( last_data_point || data_point )[ dims[0] ]
 						var delta_bottom_position = data_point[ dims[1] ] - ( last_data_point || data_point )[ dims[1] ]
 
-						left_position += delta_left_position * 100
-						bottom_position += delta_bottom_position * 100
+						left_acceleration += delta_left_position
+						bottom_acceleration += delta_bottom_position
 
-						render_data_point( data_point, left_position, bottom_position, index * (1000 / 8), color_from_integer(index) )
+						left_velocity += left_acceleration * 9.8 * seconds_per
+						bottom_velocity += bottom_acceleration * 9.8 * seconds_per
+
+						left_position += (left_velocity * seconds_per) * 10
+						bottom_position += (bottom_velocity * seconds_per) * 10
+						// left_position += delta_left_position * 100
+						// bottom_position += delta_bottom_position * 100
+
+						render_data_point( data_point, left_position, bottom_position, (index * seconds_per * 1000), color_from_integer(index) )
 
 						last_data_point = data_point
 
