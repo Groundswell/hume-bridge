@@ -106,7 +106,11 @@
 						// left_position   = left_acceleration * 100
 						// bottom_position = bottom_acceleration * 100
 
-						// console.log( "left_position: "+left_position+", bottom_position: "+bottom_position )
+
+						console.log( data_point.id )
+						console.log( "left_acceleration: "+left_acceleration+", bottom_acceleration: "+bottom_acceleration )
+						console.log( "left_velocity: "+left_velocity+", bottom_velocity: "+bottom_velocity )
+						console.log( "left_position: "+left_position+", bottom_position: "+bottom_position )
 
 						render_data_point( data_point, left_position, bottom_position, (index * seconds_per * 1000), color_from_integer(index) )
 
