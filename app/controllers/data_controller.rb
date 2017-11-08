@@ -39,4 +39,10 @@ class DataController < ActionController::Base
 
 	end
 
+	def twod
+
+		render layout: false
+
+	end
+
 end
