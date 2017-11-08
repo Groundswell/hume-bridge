@@ -65,7 +65,7 @@
 
 			function render_data() {
 				$('.grid').html('')
-				var dims = [ 'acceleration_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_#{(params[:dims]||'x,y').split(',').last}axis' ]
+				var dims = [ 'acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').last}axis' ]
 				var left_position = 0;
 				var bottom_position = 0;
 				$.getJSON( "#{raw data_path( params.permit( :dims, :limit ).merge( format: :json, tags: params[:tags] ) )}", function( data ) {
