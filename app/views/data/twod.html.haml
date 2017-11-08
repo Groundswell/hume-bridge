@@ -63,10 +63,10 @@
 				return "rgb("+r+","+g+","+b+")"
 			}
 
-			function render_data_point( data_point, left, bottom ) {
+			function render_data_point( data_point, left, bottom, delay, color ) {
 				setTimeout(function(){
-					$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
-				}, index * (1000 / 8))
+					$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
+				}, delay )
 			}
 
 			function render_data() {
@@ -84,7 +84,7 @@
 						left_position += delta_left_position * 100
 						bottom_position += delta_bottom_position * 100
 
-						render_data_point( data_point, left_position, bottom_position )
+						render_data_point( data_point, left_position, bottom_position, index * (1000 / 8), color_from_integer(index) )
 
 						last_data_point = data_point
 
