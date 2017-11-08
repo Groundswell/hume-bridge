@@ -66,6 +66,8 @@
 			function render_data_point( data_point, left, bottom, delay, color ) {
 				setTimeout(function(){
 					$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
+					if ( $('.grid>.circle').length > 20 )
+						$('.grid>.circle').first().remove();
 				}, delay )
 			}
 
