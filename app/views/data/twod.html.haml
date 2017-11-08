@@ -118,16 +118,22 @@
 						bottom_position = bottom_acceleration * 100
 
 						table_row = $('<tr></tr>')
+						table_row.append('<td>last_acceleration</td>')
 						table_row.append('<td>'+last_left_acceleration+'</td>')
 						table_row.append('<td>'+last_bottom_acceleration+'</td>')
+						table_row.append('<td>this_acceleration</td>')
 						table_row.append('<td>'+this_left_acceleration+'</td>')
 						table_row.append('<td>'+this_bottom_acceleration+'</td>')
+						table_row.append('<td>delta_acceleration</td>')
 						table_row.append('<td>'+delta_left_acceleration+'</td>')
 						table_row.append('<td>'+delta_bottom_acceleration+'</td>')
+						table_row.append('<td>sum_acceleration</td>')
 						table_row.append('<td>'+left_acceleration+'</td>')
 						table_row.append('<td>'+bottom_acceleration+'</td>')
+						table_row.append('<td>velocity</td>')
 						table_row.append('<td>'+left_velocity+'</td>')
 						table_row.append('<td>'+bottom_velocity+'</td>')
+						table_row.append('<td>distance</td>')
 						table_row.append('<td>'+(left_velocity * seconds_per)+'</td>')
 						table_row.append('<td>'+(bottom_velocity * seconds_per)+'</td>')
 
