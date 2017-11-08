@@ -68,17 +68,22 @@
 				var dims = [ 'acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').last}axis' ]
 				var left_position = 0;
 				var bottom_position = 0;
+				var last_data_point = {};
 				$.getJSON( "#{raw data_path( params.permit( :dims, :limit ).merge( format: :json, tags: params[:tags] ) )}", function( data ) {
 					console.log(data)
-					$(data).each(function(index,value){
-						left_position += value[ dims[0] ] * 10
-						bottom_position += value[ dims[1] ] * 10
+					$(data).each(function(index,data_point){
+						left_position += data_point[ dims[0] ] * ( last_data_point[ dims[0] ] || 0 ) * 10
+						bottom_position += data_point[ dims[1] ] * ( last_data_point[ dims[1] ] || 0 ) * 10
 
 						var left = left_position;
 						var bottom = bottom_position;
-						setTimeout(function(){
-							$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
-						}, index * (1000 / 8))
+
+						$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
+						//setTimeout(function(){
+						//	$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color_from_integer(index)+'"></div>')
+						//}, index * (1000 / 8))
+
+						last_data_point = data_point
 
 					})
 				});
