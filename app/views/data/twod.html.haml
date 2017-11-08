@@ -6,11 +6,15 @@
 			body {
 				padding: 0;
 				margin: 0;
-				background: #eaeaea;
-				width: 100vw;
-				height: 100vh;
 			}
 			.grid {
+				background: #eaeaea;
+				position: relative;
+				width: 100vw;
+				height: 100vh;
+				margin-bottom: 1em;
+			}
+			.positive_quadrant {
 				position: absolute;
 				top: 0;
 				left: 50vw;
@@ -27,7 +31,9 @@
 			}
 
 	%body
-		%div.grid
+		.grid
+			.positive_quadrant
+		%table.table
 		= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'
 		:javascript
 
@@ -65,14 +71,14 @@
 
 			function render_data_point( data_point, left, bottom, delay, color ) {
 				setTimeout(function(){
-					$('.grid').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
-					if ( $('.grid>.circle').length > 20 )
-						$('.grid>.circle').first().remove();
+					$('.positive_quadrant').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
+					if ( $('.positive_quadrant>.circle').length > 20 )
+						$('.positive_quadrant>.circle').first().remove();
 				}, delay )
 			}
 
 			function render_data() {
-				$('.grid').html('')
+				$('.positive_quadrant').html('')
 				var dims = [ 'acceleration_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_#{(params[:dims]||'x,y').split(',').last}axis' ]
 
 				var per_second = 8
@@ -100,25 +106,30 @@
 						var delta_left_acceleration   = this_left_acceleration - last_left_acceleration
 						var delta_bottom_acceleration = this_bottom_acceleration - last_bottom_acceleration
 
-						// console.log( "delta_left_acceleration = "+delta_left_acceleration+" = " + this_left_acceleration + " - " + last_left_acceleration )
-						// console.log( "delta_bottom_acceleration = "+delta_bottom_acceleration+" = " + this_bottom_acceleration + " - " + last_bottom_acceleration )
+						left_acceleration	+= delta_left_acceleration
+						bottom_acceleration	+= delta_bottom_acceleration
 
-						left_acceleration   += delta_left_acceleration
-						bottom_acceleration += delta_bottom_acceleration
-
-						left_velocity   += left_acceleration * seconds_per
-						bottom_velocity += bottom_acceleration * seconds_per
-						left_position += left_velocity * seconds_per * 100
-						bottom_position += bottom_velocity * seconds_per * 100
+						left_velocity	+= left_acceleration * seconds_per
+						bottom_velocity	+= bottom_acceleration * seconds_per
+						left_position	+= left_velocity * seconds_per * 100
+						bottom_position	+= bottom_velocity * seconds_per * 100
 
 						left_position   = left_acceleration * 100
 						bottom_position = bottom_acceleration * 100
 
+						table_row = $('<tr></tr>')
+						table_row.append('<td>'+last_left_acceleration+'</td>')
+						table_row.append('<td>'+last_bottom_acceleration+'</td>')
+						table_row.append('<td>'+data_point[ dims[0] ]+'</td>')
+						table_row.append('<td>'+data_point[ dims[1] ]+'</td>')
+						table_row.append('<td>'+left_acceleration+'</td>')
+						table_row.append('<td>'+bottom_acceleration+'</td>')
+						table_row.append('<td>'+left_velocity+'</td>')
+						table_row.append('<td>'+bottom_velocity+'</td>')
+						table_row.append('<td>'+(left_velocity * seconds_per)+'</td>')
+						table_row.append('<td>'+(bottom_velocity * seconds_per)+'</td>')
 
-						// console.log( data_point.id )
-						// console.log( "left_acceleration: "+left_acceleration+", bottom_acceleration: "+bottom_acceleration )
-						// console.log( "left_velocity: "+left_velocity+", bottom_velocity: "+bottom_velocity )
-						// console.log( "left_position: "+left_position+", bottom_position: "+bottom_position )
+						$('.table').append( table_row )
 
 						render_data_point( data_point, left_position, bottom_position, (index * seconds_per * 1000), color_from_integer(index) )
 
