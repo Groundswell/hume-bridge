@@ -43,13 +43,14 @@
 				var canvas = document.getElementById('myCanvas');
 				// Create an empty project and a view for the canvas:
 				paper.setup(canvas);
-				console.log(paper)
 				// Setup directly from canvas id:
 				var path = new paper.Path();
 				path.strokeColor = 'black';
 				var start = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
+				var last_point = start;
 				path.moveTo(start);
 				paper.view.draw();
+				console.log(paper,path)
 
 				function color_from_integer( i ) {
 
@@ -85,7 +86,6 @@
 
 				function render_data_point( data_point, left, bottom, delay, color ) {
 					setTimeout(function(){
-						path.lineTo(start.add([ left, bottom ]));
 						$('.positive_quadrant').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
 						if ( $('.positive_quadrant>.circle').length > 20 )
 							$('.positive_quadrant>.circle').first().remove();
@@ -94,7 +94,8 @@
 
 				function draw_data_point( data_point, delay, color ) {
 					setTimeout(function(){
-						path.lineTo(start.add([ data_point.delta_left_acceleration, data_point.delta_bottom_acceleration ]));
+						last_point = last_point.add([ data_point.delta_left_acceleration, data_point.delta_bottom_acceleration ])
+						path.lineTo(last_point);
 					}, delay )
 				}
 
@@ -127,6 +128,7 @@
 							var delta_left_acceleration   =  ( this_left_acceleration - last_left_acceleration )
 							var delta_bottom_acceleration = ( this_bottom_acceleration - last_bottom_acceleration )
 
+							data_point.last_data_point = ( last_data_point || data_point )
 							data_point.delta_left_acceleration = delta_left_acceleration
 							data_point.delta_bottom_acceleration = delta_bottom_acceleration
 
