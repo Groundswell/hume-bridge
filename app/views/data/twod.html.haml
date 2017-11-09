@@ -94,7 +94,7 @@
 
 				function draw_data_point( data_point, delay, color ) {
 					setTimeout(function(){
-						last_point = last_point.add([ data_point.delta_left_acceleration, data_point.delta_bottom_acceleration ])
+						last_point = last_point.add([ data_point.left_acceleration, data_point.bottom_acceleration ])
 						path.lineTo(last_point);
 					}, delay )
 				}
@@ -134,6 +134,9 @@
 
 							left_acceleration	+= Math.round( delta_left_acceleration )
 							bottom_acceleration	+= Math.round( delta_bottom_acceleration )
+
+							data_point.left_acceleration = left_acceleration
+							data_point.bottom_acceleration = bottom_acceleration
 
 							left_velocity	+= left_acceleration * seconds_per
 							bottom_velocity	+= bottom_acceleration * seconds_per
