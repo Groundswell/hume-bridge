@@ -94,10 +94,10 @@
 
 				function draw_data_point( data_point, delay, color ) {
 					setTimeout(function(){
-						var left = data_point["acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').first}axis"]
-						var bottom = data_point["acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').last}axis"]
-						last_point = last_point.add([ left * 10, bottom * 10 ])
-						// var last_point = last_point.add([ data_point.left_acceleration / 10, data_point.bottom_acceleration / 10 ])
+						// var left = data_point["acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').first}axis"]
+						// var bottom = data_point["acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').last}axis"]
+						// last_point = last_point.add([ left * 10, bottom * 10 ])
+						last_point = last_point.add([ data_point.left_acceleration / 10, data_point.bottom_acceleration / 10 ])
 						path.lineTo(last_point);
 					}, delay )
 				}
@@ -135,8 +135,8 @@
 							data_point.delta_left_acceleration = delta_left_acceleration
 							data_point.delta_bottom_acceleration = delta_bottom_acceleration
 
-							left_acceleration	+= Math.round( delta_left_acceleration )
-							bottom_acceleration	+= Math.round( delta_bottom_acceleration )
+							if ( Math.abs(delta_left_acceleration) > 5 ) left_acceleration	+= Math.round( delta_left_acceleration )
+							if ( Math.abs(delta_bottom_acceleration) > 5 ) bottom_acceleration	+= Math.round( delta_bottom_acceleration )
 
 							data_point.left_acceleration = left_acceleration
 							data_point.bottom_acceleration = bottom_acceleration
