@@ -94,7 +94,7 @@
 
 				function draw_data_point( data_point, delay, color ) {
 					setTimeout(function(){
-						last_point = last_point.add([ data_point.left_acceleration / 100, data_point.bottom_acceleration / 100 ])
+						last_point = last_point.add([ data_point.left_acceleration / 10, data_point.bottom_acceleration / 10 ])
 						path.lineTo(last_point);
 					}, delay )
 				}
