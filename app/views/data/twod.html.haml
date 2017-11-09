@@ -39,6 +39,11 @@
 		:javascript
 			$(function(){
 
+				var dims = [ '#{(params[:dims]||'x,y').split(',').first}', '#{(params[:dims]||'x,y').split(',').last}' ]
+				var dim_left = dims[0]
+				var dim_bottom = dims[1]
+
+
 				// Get a reference to the canvas object
 				var canvas = document.getElementById('myCanvas');
 				// Create an empty project and a view for the canvas:
@@ -84,6 +89,23 @@
 					return [r,g,b]
 				}
 
+				function render_row( data_point ) {
+
+					table_row = $('<tr></tr>')
+					table_row.append('<td>last_acceleration</td>')
+					table_row.append('<td>'+data_point.last_data_point['acceleration_'+dim_left+'axis']+'</td>')
+					table_row.append('<td>'+data_point.last_data_point['acceleration_'+dim_bottom+'axis']+'</td>')
+					table_row.append('<td>this_acceleration</td>')
+					table_row.append('<td>'+data_point['acceleration_'+dim_left+'axis']+'</td>')
+					table_row.append('<td>'+data_point['acceleration_'+dim_bottom+'axis']+'</td>')
+					table_row.append('<td>delta_acceleration</td>')
+					table_row.append('<td>'+data_point['delta_acceleration_'+dim_left+'axis']+'</td>')
+					table_row.append('<td>'+data_point['delta_acceleration_'+dim_bottom+'axis']+'</td>')
+
+					$('.table').append( table_row )
+
+				}
+
 				function render_data_point( data_point, left, bottom, delay, color ) {
 					setTimeout(function(){
 						$('.positive_quadrant').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
@@ -93,88 +115,38 @@
 				}
 
 				function draw_data_point( data_point, delay, color ) {
+
 					setTimeout(function(){
-						// var left = data_point["acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').first}axis"]
-						// var bottom = data_point["acceleration_minus_gravity_#{(params[:dims]||'x,y').split(',').last}axis"]
-						// last_point = last_point.add([ left * 10, bottom * 10 ])
-						last_point = last_point.add([ data_point.left_acceleration / 10, data_point.bottom_acceleration / 10 ])
+						var delta_acceleration_left_axis = data_point['delta_acceleration_'+dim_left+'axis'] * 100
+						var delta_acceleration_bottom_axis = data_point['delta_acceleration_'+dim_bottom+'axis'] * 100
+						console.log( delta_acceleration_bottom_axis, delta_acceleration_bottom_axis )
+
+						last_point = last_point.add([ delta_acceleration_left_axis, delta_acceleration_bottom_axis ])
 						path.lineTo(last_point);
 					}, delay )
 				}
 
 				function render_data() {
 					$('.positive_quadrant').html('')
-					var dims = [ 'acceleration_#{(params[:dims]||'x,y').split(',').first}axis', 'acceleration_#{(params[:dims]||'x,y').split(',').last}axis' ]
 
 					var per_second = 8
 					var seconds_per = 1 / per_second
-
-					var left_acceleration = 0;
-					var bottom_acceleration = 0;
-
-					var left_velocity = 0
-					var bottom_velocity = 0
-
-					var left_position = 0;
-					var bottom_position = 0;
 
 					var last_data_point = null;
 					$.getJSON( "#{raw data_path( params.permit( :dims, :limit ).merge( format: :json, tags: params[:tags] ) )}", function( data ) {
 						console.log(data)
 						$(data).each(function(index,data_point){
 
-							var last_left_acceleration    = ( last_data_point || data_point )[ dims[0] ] * 100
-							var last_bottom_acceleration  = ( last_data_point || data_point )[ dims[1] ] * 100
-							var this_left_acceleration    = data_point[ dims[0] ] * 100
-							var this_bottom_acceleration  = data_point[ dims[1] ] * 100
-
-							var delta_left_acceleration   =  ( this_left_acceleration - last_left_acceleration )
-							var delta_bottom_acceleration = ( this_bottom_acceleration - last_bottom_acceleration )
-
 							data_point.last_data_point = ( last_data_point || data_point )
-							data_point.delta_left_acceleration = delta_left_acceleration
-							data_point.delta_bottom_acceleration = delta_bottom_acceleration
-
-							if ( Math.abs(delta_left_acceleration) > 5 ) left_acceleration	+= Math.round( delta_left_acceleration )
-							if ( Math.abs(delta_bottom_acceleration) > 5 ) bottom_acceleration	+= Math.round( delta_bottom_acceleration )
-
-							data_point.left_acceleration = left_acceleration
-							data_point.bottom_acceleration = bottom_acceleration
-
-							left_velocity	+= left_acceleration * seconds_per
-							bottom_velocity	+= bottom_acceleration * seconds_per
-							left_position	+= left_velocity * seconds_per
-							bottom_position	+= bottom_velocity * seconds_per
-
-							left_position   = left_acceleration
-							bottom_position = bottom_acceleration
-
-							table_row = $('<tr></tr>')
-							table_row.append('<td>last_acceleration</td>')
-							table_row.append('<td>'+last_left_acceleration+'</td>')
-							table_row.append('<td>'+last_bottom_acceleration+'</td>')
-							table_row.append('<td>this_acceleration</td>')
-							table_row.append('<td>'+this_left_acceleration+'</td>')
-							table_row.append('<td>'+this_bottom_acceleration+'</td>')
-							table_row.append('<td>delta_acceleration</td>')
-							table_row.append('<td>'+delta_left_acceleration+'</td>')
-							table_row.append('<td>'+delta_bottom_acceleration+'</td>')
-							table_row.append('<td>sum_acceleration</td>')
-							table_row.append('<td>'+left_acceleration+'</td>')
-							table_row.append('<td>'+bottom_acceleration+'</td>')
-							table_row.append('<td>velocity</td>')
-							table_row.append('<td>'+left_velocity+'</td>')
-							table_row.append('<td>'+bottom_velocity+'</td>')
-							table_row.append('<td>distance</td>')
-							table_row.append('<td>'+(left_velocity * seconds_per)+'</td>')
-							table_row.append('<td>'+(bottom_velocity * seconds_per)+'</td>')
-
-							$('.table').append( table_row )
+							data_point.delta_acceleration_xaxis = data_point.acceleration_xaxis - data_point.last_data_point.acceleration_xaxis
+							data_point.delta_acceleration_yaxis = data_point.acceleration_yaxis - data_point.last_data_point.acceleration_yaxis
+							data_point.delta_acceleration_zaxis = data_point.acceleration_zaxis - data_point.last_data_point.acceleration_zaxis
 
 							var color = color_from_integer(index)
 
 							// render_data_point( data_point, left_position, bottom_position, (index * seconds_per * 1000), "rgb("+color[0]+","+color[1]+","+color[2]+")" )
 							draw_data_point( data_point, (index * seconds_per * 1000), color );
+							render_row( data_point )
 
 							last_data_point = data_point
 
