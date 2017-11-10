@@ -53,7 +53,7 @@ json.array!(@data_points.to_a) do |data_point|
 	json.angle_yaxis data_point.angle_yaxis
 	json.angle_zaxis data_point.angle_zaxis
 
-	json.raw_data data_point.raw_data
+	# json.raw_data data_point.raw_data
 
 	# json.acceleration_minus_gravity_xaxis data_point.corrected_acceleration_xaxis
 	# json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis
