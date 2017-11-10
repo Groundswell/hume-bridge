@@ -11,7 +11,7 @@ class DataController < ActionController::Base
 		data_points_attributes.each do |data_point_attributes|
 
 			data_point = DataPoint.new
-			data_point.raw_data = request.raw_post
+			data_point.raw_data = data_point_attributes.to_json
 			property_names.each do |property_name|
 				data_point[property_name] = data_point_attributes[property_name]
 			end
