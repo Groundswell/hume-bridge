@@ -3,18 +3,24 @@ class DataController < ActionController::Base
 	def create
 		render plain: 'Create OK', layout: false, status: 200
 
-		property_names = [ 'device_name', 'date', 'time', 'acceleration_xaxis', 'acceleration_yaxis', 'acceleration_zaxis', 'angular_velocity_xaxis', 'angular_velocity_yaxis', 'angular_velocity_zaxis', 'angle_xaxis', 'angle_yaxis', 'angle_zaxis' ]
+		property_names = [ 'device_name', 'logged_at', 'time_delta', 'date', 'time', 'acceleration_xaxis', 'acceleration_yaxis', 'acceleration_zaxis', 'angular_velocity_xaxis', 'angular_velocity_yaxis', 'angular_velocity_zaxis', 'angle_xaxis', 'angle_yaxis', 'angle_zaxis' ]
+
+		data_points_attributes = params[:_json]
+		data_points_attributes ||= [ params ]
 
 		puts "request.raw_post"
 		puts request.raw_post
 
+		data_points_attributes.each do |data_point_attributes|
 
-		data_point = DataPoint.new
-		data_point.raw_data = request.raw_post
-		property_names.each do |property_name|
-			data_point[property_name] = params[property_name]
+			data_point = DataPoint.new
+			data_point.raw_data = request.raw_post
+			property_names.each do |property_name|
+				data_point[property_name] = data_point_attributes[property_name]
+			end
+			data_point.save
+
 		end
-		data_point.save
 
 	end
 
