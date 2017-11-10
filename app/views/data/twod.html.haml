@@ -19,6 +19,7 @@
 			$(function(){
 
 				var dims = [ '#{(params[:dims]||'x,y').split(',').first}', '#{(params[:dims]||'x,y').split(',').last}' ]
+				var other_dim = '#{([ 'x','y','z' ] - [ (params[:dims]||'x,y').split(',').first,(params[:dims]||'x,y').split(',').last ]).first}'
 				var dim_left = dims[0]
 				var dim_bottom = dims[1]
 
