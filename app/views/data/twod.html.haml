@@ -38,14 +38,13 @@
 				var velocity_path = new paper.Path();
 				velocity_path.strokeColor = 'blue';
 
-				var start = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
-				var acceleration_last_point = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
-				var sum_acceleration_last_point = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
+				var acceleration_last_point = new paper.Point(paper.view.size.width / 3, paper.view.size.height / 2);
+				var sum_acceleration_last_point = new paper.Point(paper.view.size.width / 3 * 2, paper.view.size.height / 2);
 				var velocity_last_point = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
 
-				acceleration_path.moveTo(start);
-				sum_acceleration_path.moveTo(start);
-				velocity_path.moveTo(start);
+				acceleration_path.moveTo(acceleration_last_point);
+				sum_acceleration_path.moveTo(sum_acceleration_last_point);
+				velocity_path.moveTo(velocity_last_point);
 
 				paper.view.draw();
 				// console.log(paper,acceleration_path,sum_acceleration_path,velocity_path)
@@ -75,7 +74,7 @@
 				function draw_data_point( data_point, delay ) {
 
 					setTimeout(function(){
-						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
+						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 500, data_point['delta_acceleration_'+dim_bottom+'axis'] * 500 ])
 						acceleration_path.lineTo(acceleration_last_point);
 
 						sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * 100, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * 100 ])
