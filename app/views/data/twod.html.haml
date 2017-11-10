@@ -73,7 +73,7 @@
 
 				function draw_data_point( data_point, delay ) {
 
-					delay = Math.floor(json.sum_time_delta * 1000)
+					delay = Math.floor(data_point.sum_time_delta * 1000)
 
 					setTimeout(function(){
 						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
