@@ -19,7 +19,11 @@ class DataController < ActionController::Base
 					attrs[property_name.to_sym] = data_point_attributes[property_name]
 				end
 
-				attrs[:logged_at] = attrs[:logged_at] || Time.at( data_point_attributes[:timestamp].to_f / 1000 ) if data_point_attributes[:timestamp].present?
+				if attrs[:logged_at].present?
+					attrs[:logged_at] = DateTime.parse( attrs[:logged_at] )
+				elsif data_point_attributes[:timestamp].present?
+					attrs[:logged_at] = Time.at( data_point_attributes[:timestamp].to_f / 1000 )
+				end
 
 				worker.add(attrs)
 			end
