@@ -8,9 +8,6 @@ class DataController < ActionController::Base
 		data_points_attributes = params[:_json]
 		data_points_attributes ||= [ params ]
 
-		puts "request.raw_post"
-		puts request.raw_post
-
 		data_points_attributes.each do |data_point_attributes|
 
 			data_point = DataPoint.new
