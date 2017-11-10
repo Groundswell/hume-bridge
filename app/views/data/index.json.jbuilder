@@ -29,7 +29,11 @@ json.array!(@data_points.to_a) do |data_point|
 	json.time data_point.time
 
 	json.timestamp data_point.created_at.to_f
-	json.time_delta data_point.created_at.to_f - last_data_point.created_at.to_f
+	if data_point.time_delta.present? && data_point.time_delta != 0
+		json.time_delta data_point.time_delta
+	else
+		json.time_delta data_point.created_at.to_f - last_data_point.created_at.to_f
+	end
 
 	json.delta_acceleration_xaxis delta_acceleration_xaxis
 	json.delta_acceleration_yaxis delta_acceleration_yaxis
