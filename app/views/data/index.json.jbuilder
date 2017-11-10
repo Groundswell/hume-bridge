@@ -55,10 +55,10 @@ json.array!(@data_points.to_a) do |data_point|
 
 	json.raw_data data_point.raw_data
 
-	json.acceleration_minus_gravity_xaxis data_point.corrected_acceleration_xaxis
-	json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis
-	json.acceleration_minus_gravity_zaxis data_point.corrected_acceleration_zaxis
-	json.acceleration_minus_gravity_magnitude data_point.corrected_acceleration_vector_length
+	# json.acceleration_minus_gravity_xaxis data_point.corrected_acceleration_xaxis
+	# json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis
+	# json.acceleration_minus_gravity_zaxis data_point.corrected_acceleration_zaxis
+	# json.acceleration_minus_gravity_magnitude data_point.corrected_acceleration_vector_length
 
 	last_data_point = data_point
 end
