@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171104132200) do
+ActiveRecord::Schema.define(version: 20171110074800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,7 +33,10 @@ ActiveRecord::Schema.define(version: 20171104132200) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "tags",                   default: [], array: true
+    t.datetime "logged_at"
+    t.float    "time_delta"
     t.index ["device_id", "id"], name: "index_data_points_on_device_id_and_id", using: :btree
+    t.index ["logged_at"], name: "index_data_points_on_logged_at", using: :btree
     t.index ["tags"], name: "index_data_points_on_tags", using: :gin
   end
 
