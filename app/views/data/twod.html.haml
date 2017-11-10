@@ -74,14 +74,14 @@
 				function draw_data_point( data_point, delay ) {
 
 					setTimeout(function(){
-						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 10000, data_point['delta_acceleration_'+dim_bottom+'axis'] * 10000 ])
+						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
 						acceleration_path.lineTo(acceleration_last_point);
 
 						sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * 100, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * 100 ])
 						sum_acceleration_path.lineTo(sum_acceleration_last_point);
 
-						// velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta * 1000, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta * 1000 ])
-						// velocity_path.lineTo(velocity_last_point);
+						velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta * 1000, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta * 1000 ])
+						velocity_path.lineTo(velocity_last_point);
 					}, delay )
 				}
 
