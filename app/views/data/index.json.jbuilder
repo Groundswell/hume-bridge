@@ -1,4 +1,25 @@
+last_data_point = nil
+
+
+sum_delta_acceleration_xaxis = 0
+sum_delta_acceleration_yaxis = 0
+sum_delta_acceleration_zaxis = 0
+
+
 json.array!(@data_points.to_a) do |data_point|
+	last_data_point ||= data_point
+
+	# correct rotation
+
+	delta_acceleration_xaxis = ( data_point.acceleration_xaxis - last_data_point.acceleration_xaxis )
+	delta_acceleration_yaxis = ( data_point.acceleration_yaxis - last_data_point.acceleration_yaxis )
+	delta_acceleration_zaxis = ( data_point.acceleration_zaxis - last_data_point.acceleration_zaxis )
+
+	sum_delta_acceleration_xaxis += delta_acceleration_xaxis
+	sum_delta_acceleration_yaxis += delta_acceleration_yaxis
+	sum_delta_acceleration_zaxis += delta_acceleration_zaxis
+
+
 	json.id data_point.id
 
 	json.device_id data_point.device_id
@@ -7,9 +28,21 @@ json.array!(@data_points.to_a) do |data_point|
 	json.date data_point.date
 	json.time data_point.time
 
+	json.timestamp data_point.created_at.to_f
+	json.time_delta data_point.created_at.to_f - last_data_point.created_at.to_f
+
+	json.delta_acceleration_xaxis delta_acceleration_xaxis
+	json.delta_acceleration_yaxis delta_acceleration_yaxis
+	json.delta_acceleration_zaxis delta_acceleration_zaxis
+
+	json.sum_delta_acceleration_xaxis sum_delta_acceleration_xaxis
+	json.sum_delta_acceleration_yaxis sum_delta_acceleration_yaxis
+	json.sum_delta_acceleration_zaxis sum_delta_acceleration_zaxis
+
 	json.acceleration_xaxis data_point.acceleration_xaxis
 	json.acceleration_yaxis data_point.acceleration_yaxis
 	json.acceleration_zaxis data_point.acceleration_zaxis
+
 	json.acceleration_magnitude data_point.acceleration_vector_length
 
 	json.angular_velocity_xaxis data_point.angular_velocity_xaxis
@@ -26,4 +59,6 @@ json.array!(@data_points.to_a) do |data_point|
 	json.acceleration_minus_gravity_yaxis data_point.corrected_acceleration_yaxis
 	json.acceleration_minus_gravity_zaxis data_point.corrected_acceleration_zaxis
 	json.acceleration_minus_gravity_magnitude data_point.corrected_acceleration_vector_length
+
+	last_data_point = data_point
 end

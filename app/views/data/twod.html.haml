@@ -11,28 +11,7 @@
 				width: 100vw;
 				height: 100vh;
 			}
-			.grid {
-				background: #eaeaea;
-				position: relative;
-				width: 100vw;
-				height: 100vh;
-				margin-bottom: 1em;
-			}
-			.positive_quadrant {
-				position: absolute;
-				top: 0;
-				left: 50vw;
-				height: 50vh;
-				width: 50vw;
-				background: #eeeeee;
-			}
-			.circle {
-				border-radius: 50%;
-				background: black;
-				width: 2px;
-				height: 2px;
-				position: absolute;
-			}
+
 		= javascript_include_tag 'http://paperjs.org/assets/js/paper.js'
 		= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'
 
@@ -49,45 +28,27 @@
 				// Create an empty project and a view for the canvas:
 				paper.setup(canvas);
 				// Setup directly from canvas id:
-				var path = new paper.Path();
-				path.strokeColor = 'black';
+				var acceleration_path = new paper.Path();
+				acceleration_path.strokeColor = 'black';
+
+				var sum_acceleration_path = new paper.Path();
+				sum_acceleration_path.strokeColor = 'red';
+
+				var velocity_path = new paper.Path();
+				velocity_path.strokeColor = 'blue';
+
 				var start = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
-				var last_point = start;
-				path.moveTo(start);
+				var acceleration_last_point = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
+				var sum_acceleration_last_point = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
+				var velocity_last_point = new paper.Point(paper.view.size.width / 2, paper.view.size.height / 2);
+
+				acceleration_path.moveTo(start);
+				sum_acceleration_path.moveTo(start);
+				velocity_path.moveTo(start);
+
 				paper.view.draw();
-				console.log(paper,path)
+				// console.log(paper,acceleration_path,sum_acceleration_path,velocity_path)
 
-				function color_from_integer( i ) {
-
-					var r = 0
-					var g = 0
-					var b = 0
-
-					if( i < 256 ) {
-						r = i
-					} else if( i < 512 ) {
-						r = 255
-						g = (i - 255)
-					} else if( i < 768 ) {
-						r = 255 - (i - 511)
-						g = 255
-					} else if( i < 1024 ) {
-						g = 255
-						b = (i - 768)
-					} else if( i < 1280 ) {
-						g = 255 - (i - 1023)
-						b = 255
-					} else if( i < 1536 ) {
-						b = 255
-						r = (i - 1280)
-					} else if( i < 1792 ) {
-						b = 255 - (i - 1535)
-						r = 255
-					}
-
-
-					return [r,g,b]
-				}
 
 				function render_row( data_point ) {
 
@@ -101,28 +62,26 @@
 					table_row.append('<td>delta_acceleration</td>')
 					table_row.append('<td>'+data_point['delta_acceleration_'+dim_left+'axis']+'</td>')
 					table_row.append('<td>'+data_point['delta_acceleration_'+dim_bottom+'axis']+'</td>')
+					table_row.append('<td>angles</td>')
+					table_row.append('<td>'+data_point.angle_xaxis+'</td>')
+					table_row.append('<td>'+data_point.angle_yaxis+'</td>')
+					table_row.append('<td>'+data_point.angle_zaxis+'</td>')
 
 					$('.table').append( table_row )
 
 				}
 
-				function render_data_point( data_point, left, bottom, delay, color ) {
-					setTimeout(function(){
-						$('.positive_quadrant').append('<div class="circle" style="left:'+left+'px;bottom:'+bottom+'px;background:'+color+'"></div>')
-						if ( $('.positive_quadrant>.circle').length > 20 )
-							$('.positive_quadrant>.circle').first().remove();
-					}, delay )
-				}
-
-				function draw_data_point( data_point, delay, color ) {
+				function draw_data_point( data_point, delay ) {
 
 					setTimeout(function(){
-						var delta_acceleration_left_axis = data_point['delta_acceleration_'+dim_left+'axis'] * 100
-						var delta_acceleration_bottom_axis = data_point['delta_acceleration_'+dim_bottom+'axis'] * 100
-						console.log( delta_acceleration_bottom_axis, delta_acceleration_bottom_axis )
+						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
+						acceleration_path.lineTo(acceleration_last_point);
 
-						last_point = last_point.add([ delta_acceleration_left_axis, delta_acceleration_bottom_axis ])
-						path.lineTo(last_point);
+						sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * 100, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * 100 ])
+						sum_acceleration_path.lineTo(sum_acceleration_last_point);
+
+						// velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta * 1000, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta * 1000 ])
+						// velocity_path.lineTo(velocity_last_point);
 					}, delay )
 				}
 
@@ -138,14 +97,21 @@
 						$(data).each(function(index,data_point){
 
 							data_point.last_data_point = ( last_data_point || data_point )
-							data_point.delta_acceleration_xaxis = data_point.acceleration_xaxis - data_point.last_data_point.acceleration_xaxis
-							data_point.delta_acceleration_yaxis = data_point.acceleration_yaxis - data_point.last_data_point.acceleration_yaxis
-							data_point.delta_acceleration_zaxis = data_point.acceleration_zaxis - data_point.last_data_point.acceleration_zaxis
 
-							var color = color_from_integer(index)
+							// if ( !data_point.velocity_xaxis ) data_point.velocity_xaxis = (data_point.sum_delta_acceleration_xaxis - (data_point.delta_acceleration_xaxis / 2)) * data_point.time_delta
+							// if ( !data_point.velocity_yaxis ) data_point.velocity_yaxis = (data_point.sum_delta_acceleration_yaxis - (data_point.delta_acceleration_yaxis / 2)) * data_point.time_delta
+							// if ( !data_point.velocity_zaxis ) data_point.velocity_zaxis = (data_point.sum_delta_acceleration_zaxis - (data_point.delta_acceleration_zaxis / 2)) * data_point.time_delta
 
-							// render_data_point( data_point, left_position, bottom_position, (index * seconds_per * 1000), "rgb("+color[0]+","+color[1]+","+color[2]+")" )
-							draw_data_point( data_point, (index * seconds_per * 1000), color );
+							// if ( !data_point.delta_velocity_xaxis ) data_point.delta_velocity_xaxis = data_point.velocity_xaxis - data_point.last_data_point.velocity_xaxis
+							// if ( !data_point.delta_velocity_yaxis ) data_point.delta_velocity_yaxis = data_point.velocity_yaxis - data_point.last_data_point.velocity_yaxis
+							// if ( !data_point.delta_velocity_zaxis ) data_point.delta_velocity_zaxis = data_point.velocity_zaxis - data_point.last_data_point.velocity_zaxis
+
+							// if ( !data_point.distance_xaxis ) data_point.distance_xaxis = ( data_point.velocity_xaxis - ( data_point.delta_velocity_xaxis / 2 ) ) * data_point.time_delta
+							// if ( !data_point.distance_yaxis ) data_point.distance_yaxis = ( data_point.velocity_yaxis - ( data_point.delta_velocity_yaxis / 2 ) ) * data_point.time_delta
+							// if ( !data_point.distance_zaxis ) data_point.distance_zaxis = ( data_point.velocity_zaxis - ( data_point.delta_velocity_zaxis / 2 ) ) * data_point.time_delta
+
+
+							draw_data_point( data_point, (index * seconds_per * 1000) );
 							render_row( data_point )
 
 							last_data_point = data_point
@@ -157,6 +123,4 @@
 			})
 	%body
 		%canvas#myCanvas{ resize: true }
-		-#.grid
-			.positive_quadrant
 		%table.table
