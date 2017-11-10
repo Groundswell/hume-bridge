@@ -41,6 +41,7 @@ class DataController < ActionController::Base
 		@data_points = DataPoint.all
 		@data_points = @data_points.with_all_tags( params[:tags] ) if params[:tags].present?
 		@data_points = @data_points.where( tags: '{}' ) if params[:no_tags].present?
+		@data_points = @data_points.where( device_id: params[:device_id] ) if params[:device_id].present?
 
 
 		last_index = params[:since] || @data_points.order(id: :desc).offset(@limit).pluck(:id).first || 0

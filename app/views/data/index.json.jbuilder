@@ -5,11 +5,17 @@ sum_delta_acceleration_xaxis = 0
 sum_delta_acceleration_yaxis = 0
 sum_delta_acceleration_zaxis = 0
 
+sum_time_delta = 0
 
 json.array!(@data_points.to_a) do |data_point|
 	last_data_point ||= data_point
 
-	# correct rotation
+	if data_point.time_delta.present? && data_point.time_delta != 0
+		time_delta = data_point.time_delta
+	else
+		time_delta = data_point.created_at.to_f - last_data_point.created_at.to_f
+	end
+	sum_time_delta = sum_time_delta + time_delta
 
 	delta_acceleration_xaxis = ( data_point.acceleration_xaxis - last_data_point.acceleration_xaxis )
 	delta_acceleration_yaxis = ( data_point.acceleration_yaxis - last_data_point.acceleration_yaxis )
@@ -29,11 +35,8 @@ json.array!(@data_points.to_a) do |data_point|
 	json.time data_point.time
 
 	json.timestamp data_point.created_at.to_f
-	if data_point.time_delta.present? && data_point.time_delta != 0
-		json.time_delta data_point.time_delta
-	else
-		json.time_delta data_point.created_at.to_f - last_data_point.created_at.to_f
-	end
+	json.time_delta time_delta
+	json.sum_time_delta sum_time_delta
 
 	json.delta_acceleration_xaxis delta_acceleration_xaxis
 	json.delta_acceleration_yaxis delta_acceleration_yaxis
