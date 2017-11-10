@@ -15,7 +15,8 @@ class DataController < ActionController::Base
 			property_names.each do |property_name|
 				data_point[property_name] = data_point_attributes[property_name]
 			end
-			
+
+			# unix timestamp
 			data_point.logged_at ||= Time.at( data_point_attributes[:timestamp].to_f / 1000 ) if data_point_attributes[:timestamp].present?
 
 			data_point.save
