@@ -29,7 +29,7 @@ json.array!(@data_points.to_a) do |data_point|
 	json.id data_point.id
 
 	json.logged_at data_point.logged_at.try(:to_f)
-	json.logged_at_from_now Time.now.to_f - data_point.logged_at.to_f
+	json.logged_at_from_now data_point.logged_at.to_f - Time.now.to_f
 
 	json.device_id data_point.device_id
 	json.device_name data_point.device_name
