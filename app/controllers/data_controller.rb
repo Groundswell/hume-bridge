@@ -53,6 +53,15 @@ class DataController < ActionController::Base
 
 	end
 
+	def tag_new_with
+
+		@data_points = DataPoint.all
+		@data_points = @data_points.where( device_id: params[:device_id] ) if params[:device_id].present?
+		@data_points.tag_new_with( params[:tags] )
+
+		render plain: 'OK', layout: false, status: 200
+	end
+
 	def twod
 
 		render layout: false
