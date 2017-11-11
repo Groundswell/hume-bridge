@@ -46,9 +46,7 @@
 				paper.view.draw();
 
 				function draw_data_point( data_point ) {
-					var date = new Date()
-					date.setSeconds(date.getSeconds() - 10);
-					var delay = ( data_point.logged_at / 1000 ) - date.getTime()
+					var delay = ( data_point.logged_at_from_now + 15.0 ) / 1000.0
 
 					var draw_data_point = function(){
 						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
