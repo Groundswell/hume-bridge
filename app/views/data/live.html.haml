@@ -23,6 +23,7 @@
 				var dim_left = dims[0]
 				var dim_bottom = dims[1]
 				var last_data_point = null;
+				var current_data_point = null;
 
 				var canvas = document.getElementById('myCanvas');
 				paper.setup(canvas);
@@ -46,57 +47,57 @@
 				paper.view.draw();
 
 				function draw_data_point( data_point ) {
-					var delay = ( data_point.logged_at_from_now + 15.0 ) * 1000.0
+					acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
+					acceleration_path.lineTo(acceleration_last_point);
 
-					var draw_data_point = function(){
-						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
-						acceleration_path.lineTo(acceleration_last_point);
+					sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'], data_point['sum_delta_acceleration_'+dim_bottom+'axis'] ])
+					sum_acceleration_path.lineTo(sum_acceleration_last_point);
 
-						sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'], data_point['sum_delta_acceleration_'+dim_bottom+'axis'] ])
-						sum_acceleration_path.lineTo(sum_acceleration_last_point);
-
-						velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta ])
-						velocity_path.lineTo(velocity_last_point);
-					}
-
-					if ( delay <= 0 ) {
-						draw_data_point()
-					} else {
-						setTimeout(draw_data_point, delay )
-					}
+					velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta ])
+					velocity_path.lineTo(velocity_last_point);
 				}
 
-				function render_data() {
+				function fetch_data() {
 					var since = ''
-					var time_offset = 0
+					if ( last_data_point ) since = last_data_point.id
 
-					if ( last_data_point ) {
-						time_offset = last_data_point.sum_time_delta
-						since = last_data_point.id
-					}
-
-					$.getJSON( "#{raw data_path( params.permit( :dims, :limit, :device_id ).merge( format: :json, tags: params[:tags] ) )}&since="+since, function( data ) {
-
-
+					$.getJSON( "#{raw data_path( params.permit( :dims, :limit, :device_id ).merge( format: :json, tags: params[:tags], logged_since_seconds_ago: 5 ) )}&since="+since, function( data ) {
 
 						$(data).each(function(index,data_point){
 
 							data_point.last_data_point = ( last_data_point || data_point )
-
-							data_point.sum_time_delta += time_offset
-
-							draw_data_point( data_point );
-
+							data_point.last_data_point.next_data_point = data_point
 							last_data_point = data_point
+
+							if ( !current_data_point ) current_data_point = data_point
 
 						})
 
+						start_walking_list()
+
 						setTimeout(function(){
-							render_data();
+							fetch_data();
 						}, 1000 )
 					});
 				}
-				render_data();
+
+				var walk_list = null;
+
+				function start_walking_list() {
+					if ( !walk_list && current_data_point && current_data_point.next_data_point ) {
+						walk_list = function() {
+							if ( current_data_point.next_data_point ) {
+								draw_data_point( current_data_point )
+								current_data_point = current_data_point.next_data_point
+								setTimeout( walk_list, current_data_point.time_delta * 1000 )
+							} else {
+								walk_list = null;
+							}
+						}
+					}
+				}
+
+				fetch_data();
 			})
 	%body
 		%canvas#myCanvas{ resize: true }
