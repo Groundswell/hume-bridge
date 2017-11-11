@@ -22,7 +22,7 @@ class DataController < ActionController::Base
 				if attrs[:logged_at].present?
 					attrs[:logged_at] = DateTime.parse( attrs[:logged_at] )
 				elsif data_point_attributes[:timestamp].present?
-					attrs[:logged_at] = Time.at( data_point_attributes[:timestamp].to_f / 1000 )
+					attrs[:logged_at] = Time.at( data_point_attributes[:timestamp].to_f )
 				end
 
 				worker.add(attrs)
