@@ -22,6 +22,8 @@
 				var other_dim = '#{([ 'x','y','z' ] - [ (params[:dims]||'x,y').split(',').first,(params[:dims]||'x,y').split(',').last ]).first}'
 				var dim_left = dims[0]
 				var dim_bottom = dims[1]
+				var last_data_point = null;
+				var current_data_point = null;
 
 				var canvas = document.getElementById('myCanvas');
 				paper.setup(canvas);
@@ -44,67 +46,68 @@
 
 				paper.view.draw();
 
+				function draw_data_point( data_point ) {
+					acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
+					acceleration_path.lineTo(acceleration_last_point);
 
-				function render_row( data_point ) {
+					sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'], data_point['sum_delta_acceleration_'+dim_bottom+'axis'] ])
+					sum_acceleration_path.lineTo(sum_acceleration_last_point);
 
-					table_row = $('<tr></tr>')
-					table_row.append('<td>last_acceleration</td>')
-					table_row.append('<td>'+data_point.last_data_point['acceleration_'+dim_left+'axis']+'</td>')
-					table_row.append('<td>'+data_point.last_data_point['acceleration_'+dim_bottom+'axis']+'</td>')
-					table_row.append('<td>this_acceleration</td>')
-					table_row.append('<td>'+data_point['acceleration_'+dim_left+'axis']+'</td>')
-					table_row.append('<td>'+data_point['acceleration_'+dim_bottom+'axis']+'</td>')
-					table_row.append('<td>delta_acceleration</td>')
-					table_row.append('<td>'+data_point['delta_acceleration_'+dim_left+'axis']+'</td>')
-					table_row.append('<td>'+data_point['delta_acceleration_'+dim_bottom+'axis']+'</td>')
-					table_row.append('<td>angles</td>')
-					table_row.append('<td>'+data_point.angle_xaxis+'</td>')
-					table_row.append('<td>'+data_point.angle_yaxis+'</td>')
-					table_row.append('<td>'+data_point.angle_zaxis+'</td>')
-
-					$('.table').append( table_row )
-
+					velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta ])
+					velocity_path.lineTo(velocity_last_point);
 				}
 
-				function draw_data_point( data_point, delay ) {
+				function fetch_data() {
+					var since = ''
+					if ( last_data_point ) since = last_data_point.id
 
-					delay = Math.floor(data_point.sum_time_delta * 1000)
+					var url = "#{raw data_path( params.permit( :dims, :limit, :device_id, :logged_since_seconds_ago ).merge( format: :json, tags: params[:tags] ) )}&since="+since
 
-					setTimeout(function(){
-						acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
-						acceleration_path.lineTo(acceleration_last_point);
+					$.getJSON( url, function( data ) {
 
-						sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'], data_point['sum_delta_acceleration_'+dim_bottom+'axis'] ])
-						sum_acceleration_path.lineTo(sum_acceleration_last_point);
-
-						velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta ])
-						velocity_path.lineTo(velocity_last_point);
-					}, delay )
-				}
-
-				function render_data() {
-					$('.positive_quadrant').html('')
-
-					var per_second = 8
-					var seconds_per = 1 / per_second
-
-					var last_data_point = null;
-					$.getJSON( "#{raw data_path( params.permit( :dims, :limit, :device_id ).merge( format: :json, tags: params[:tags] ) )}", function( data ) {
-						console.log(data)
 						$(data).each(function(index,data_point){
 
 							data_point.last_data_point = ( last_data_point || data_point )
-
-							draw_data_point( data_point, (index * seconds_per * 1000) );
-							render_row( data_point )
-
+							data_point.last_data_point.next_data_point = data_point
 							last_data_point = data_point
 
+							if ( !current_data_point ) current_data_point = data_point
+
 						})
+
+						start_walking_list()
+
+						if( data.length > 0 ) fetch_data();
 					});
 				}
-				render_data();
+
+				var walk_list = null;
+
+				function start_walking_list() {
+					if ( !walk_list && current_data_point && current_data_point.next_data_point ) {
+						console.log('start walking', current_data_point)
+						walk_list = function() {
+							if ( current_data_point.next_data_point ) {
+								console.log('take step', current_data_point)
+								var this_data_point = current_data_point
+								draw_data_point( this_data_point )
+								current_data_point = current_data_point.next_data_point
+								setTimeout( walk_list, current_data_point.time_delta * 1000 )
+								this_data_point.last_data_point = null; // dereference old nodes
+							} else {
+								console.log('stop walking', current_data_point, current_data_point.next_data_point)
+								walk_list = null;
+							}
+						}
+						walk_list()
+					} else if ( walk_list ) {
+						console.log('already walking')
+					} else {
+						console.log('not ready to walk yet')
+					}
+				}
+
+				fetch_data();
 			})
 	%body
 		%canvas#myCanvas{ resize: true }
-		%table.table
