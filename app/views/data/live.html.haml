@@ -89,15 +89,17 @@
 						walk_list = function() {
 							if ( current_data_point.next_data_point ) {
 								console.log('take step', current_data_point)
-								draw_data_point( current_data_point )
-
+								var this_data_point = current_data_point
+								draw_data_point( this_data_point )
 								current_data_point = current_data_point.next_data_point
 								setTimeout( walk_list, current_data_point.time_delta * 1000 )
+								this_data_point.last_data_point = null; // dereference old nodes
 							} else {
 								console.log('stop walking', current_data_point, current_data_point.next_data_point)
 								walk_list = null;
 							}
 						}
+						walk_list()
 					} else if ( walk_list ) {
 						console.log('already walking')
 					} else {
