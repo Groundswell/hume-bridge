@@ -61,7 +61,7 @@
 					var since = ''
 					if ( last_data_point ) since = last_data_point.id
 
-					$.getJSON( "#{raw data_path( params.permit( :dims, :limit, :device_id ).merge( format: :json, tags: params[:tags], logged_since_seconds_ago: 5 ) )}&since="+since, function( data ) {
+					$.getJSON( "#{raw data_path( params.permit( :dims, :limit, :device_id ).merge( format: :json, tags: params[:tags], logged_since_seconds_ago: 30 ) )}&since="+since, function( data ) {
 
 						$(data).each(function(index,data_point){
 
