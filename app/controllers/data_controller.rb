@@ -44,7 +44,7 @@ class DataController < ActionController::Base
 		@data_points = @data_points.where( device_id: params[:device_id] ) if params[:device_id].present?
 
 
-		last_index = params[:since] || @data_points.order(id: :desc).offset(@limit).pluck(:id).first || 0
+		last_index = params[:since] || @data_points.order(id: :desc).limit(@limit).pluck(:id).last || 0
 
 		@data_points = @data_points.where( 'id > ?', last_index )
 		@data_points = @data_points.order( id: :asc ).limit(@limit)
