@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 	resources :data, only: [ :index, :create ] do
 		get :twod, on: :collection
 		get :tag_new_with, on: :collection
+		get :live, on: :collection
 	end
 
 end

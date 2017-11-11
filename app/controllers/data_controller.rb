@@ -68,4 +68,10 @@ class DataController < ActionController::Base
 
 	end
 
+	def live
+
+		render layout: false
+
+	end
+
 end
