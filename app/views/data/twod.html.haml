@@ -39,20 +39,28 @@
 				var corner_acceleration_path = new paper.Path();
 				corner_acceleration_path.strokeColor = 'blue';
 
-				var acceleration_last_point = new paper.Point(paper.view.size.width / 5, paper.view.size.height / 2);
-				var sum_acceleration_last_point = new paper.Point(paper.view.size.width / 5 * 4, paper.view.size.height / 2);
-				var velocity_last_point = new paper.Point(paper.view.size.width / 5 * 3, paper.view.size.height / 2);
-				var corner_acceleration_last_point = new paper.Point(paper.view.size.width / 5 * 2, paper.view.size.height / 2);
+				var major_corner_acceleration_path = new paper.Path();
+				major_corner_acceleration_path.strokeColor = 'purple';
+
+
+				var acceleration_last_point					= new paper.Point(paper.view.size.width / 6 * 1, paper.view.size.height / 2);
+				var corner_acceleration_last_point			= new paper.Point(paper.view.size.width / 6 * 2, paper.view.size.height / 2);
+				var major_corner_acceleration_last_point	= new paper.Point(paper.view.size.width / 6 * 3, paper.view.size.height / 2);
+				var velocity_last_point						= new paper.Point(paper.view.size.width / 6 * 4, paper.view.size.height / 2);
+				var sum_acceleration_last_point				= new paper.Point(paper.view.size.width / 6 * 5, paper.view.size.height / 2);
+
 
 				var acceleration_start_point = acceleration_last_point
 				var sum_acceleration_start_point = sum_acceleration_last_point
 				var velocity_start_point = velocity_last_point
 				var corner_acceleration_start_point = corner_acceleration_last_point
+				var major_corner_acceleration_start_point = major_corner_acceleration_last_point
 
 				acceleration_path.moveTo(acceleration_start_point);
 				sum_acceleration_path.moveTo(sum_acceleration_start_point);
 				velocity_path.moveTo(velocity_start_point);
 				corner_acceleration_path.moveTo(corner_acceleration_start_point);
+				major_corner_acceleration_path.moveTo(major_corner_acceleration_start_point);
 
 				paper.view.draw();
 
@@ -66,12 +74,15 @@
 					velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta ])
 					velocity_path.lineTo(velocity_last_point);
 
-					if( data_point['corder_'+dim_left+'axis'] || data_point['corder_'+dim_bottom+'axis'] ) {
-
+					if( data_point['corner_'+dim_left+'axis'] || data_point['corner_'+dim_bottom+'axis'] ) {
 						corner_acceleration_last_point = new paper.Point( corner_acceleration_start_point.x + data_point['sum_delta_acceleration_'+dim_left+'axis'] * 100, corner_acceleration_start_point.y + data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * 100 )
 						corner_acceleration_path.lineTo(corner_acceleration_last_point);
+					}
 
-						// corner_acceleration_path.lineTo( [ acceleration_last_point.x + corner_acceleration_start_point.x - acceleration_start_point.x, acceleration_last_point.y + corner_acceleration_start_point.y - acceleration_start_point.y ] );
+					if( data_point['major_corner_'+dim_left+dim_bottom+'axis'] ) {
+						console.log( data_point )
+						major_corner_acceleration_last_point = new paper.Point( major_corner_acceleration_start_point.x + data_point['sum_delta_acceleration_'+dim_left+'axis'] * 100, major_corner_acceleration_start_point.y + data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * 100 )
+						major_corner_acceleration_path.lineTo(major_corner_acceleration_last_point);
 					}
 
 				}
@@ -91,13 +102,12 @@
 							last_data_point = data_point
 
 							if( data_point.last_data_point == data_point ) {
-								data_point.corder_xaxis = true
-								data_point.corder_yaxis = true
-								data_point.corder_zaxis = true
-							} else {
-								if( (data_point.last_data_point.delta_acceleration_xaxis > 0 && data_point.delta_acceleration_xaxis < 0) || (data_point.last_data_point.delta_acceleration_xaxis < 0 && data_point.delta_acceleration_xaxis > 0) ) data_point.corder_xaxis = true
-								if( (data_point.last_data_point.delta_acceleration_yaxis > 0 && data_point.delta_acceleration_yaxis < 0) || (data_point.last_data_point.delta_acceleration_yaxis < 0 && data_point.delta_acceleration_yaxis > 0) ) data_point.corder_yaxis = true
-								if( (data_point.last_data_point.delta_acceleration_zaxis > 0 && data_point.delta_acceleration_zaxis < 0) || (data_point.last_data_point.delta_acceleration_zaxis < 0 && data_point.delta_acceleration_zaxis > 0) ) data_point.corder_zaxis = true
+								data_point.corner_xaxis = true
+								data_point.corner_yaxis = true
+								data_point.corner_zaxis = true
+								data_point.major_corner_xyaxis = true
+								data_point.major_corner_xzaxis = true
+								data_point.major_corner_yzaxis = true
 							}
 
 							if ( !current_data_point ) current_data_point = data_point
