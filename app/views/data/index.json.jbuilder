@@ -55,9 +55,9 @@ json.array!(@data_points.to_a) do |data_point|
 	json.acceleration_yaxis_delta data_point.acceleration_yaxis_delta
 	json.acceleration_zaxis_delta data_point.acceleration_zaxis_delta
 
-	json.acceleration_xaxis_delta_sum acceleration_xaxis_delta_sum
-	json.acceleration_yaxis_delta_sum acceleration_yaxis_delta_sum
-	json.acceleration_zaxis_delta_sum acceleration_zaxis_delta_sum
+	json.acceleration_xaxis_delta_sum data_point.acceleration_xaxis_delta_sum
+	json.acceleration_yaxis_delta_sum data_point.acceleration_yaxis_delta_sum
+	json.acceleration_zaxis_delta_sum data_point.acceleration_zaxis_delta_sum
 
 	json.acceleration_xaxis data_point.acceleration_xaxis
 	json.acceleration_yaxis data_point.acceleration_yaxis
