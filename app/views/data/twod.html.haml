@@ -74,15 +74,9 @@
 					velocity_last_point = velocity_last_point.add([ data_point['acceleration_'+dim_left+'axis_delta_sum'] * data_point.time_delta, data_point['acceleration_'+dim_bottom+'axis_delta_sum'] * data_point.time_delta ])
 					velocity_path.lineTo(velocity_last_point);
 
-					if( data_point['corner_'+dim_left+'axis'] || data_point['corner_'+dim_bottom+'axis'] ) {
+					if( data_point['acceleration_'+dim_left+'axis_corner'] || data_point['acceleration_'+dim_bottom+'axis_corner'] ) {
 						corner_acceleration_last_point = new paper.Point( corner_acceleration_start_point.x + data_point['acceleration_'+dim_left+'axis_delta_sum'] * 100, corner_acceleration_start_point.y + data_point['acceleration_'+dim_bottom+'axis_delta_sum'] * 100 )
 						corner_acceleration_path.lineTo(corner_acceleration_last_point);
-					}
-
-					if( data_point['major_corner_'+dim_left+dim_bottom+'axis'] ) {
-						console.log( data_point )
-						major_corner_acceleration_last_point = new paper.Point( major_corner_acceleration_start_point.x + data_point['acceleration_'+dim_left+'axis_delta_sum'] * 100, major_corner_acceleration_start_point.y + data_point['acceleration_'+dim_bottom+'axis_delta_sum'] * 100 )
-						major_corner_acceleration_path.lineTo(major_corner_acceleration_last_point);
 					}
 
 				}
@@ -105,9 +99,6 @@
 								data_point.corner_xaxis = true
 								data_point.corner_yaxis = true
 								data_point.corner_zaxis = true
-								data_point.major_corner_xyaxis = true
-								data_point.major_corner_xzaxis = true
-								data_point.major_corner_yzaxis = true
 							}
 
 							if ( !current_data_point ) current_data_point = data_point
