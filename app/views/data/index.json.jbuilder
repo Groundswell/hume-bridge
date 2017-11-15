@@ -1,38 +1,12 @@
 last_data_point = nil
 
-acceleration_xaxis_delta_sum = 0
-acceleration_yaxis_delta_sum = 0
-acceleration_zaxis_delta_sum = 0
-
-last_acceleration_xaxis_delta = 0
-last_acceleration_yaxis_delta = 0
-last_acceleration_zaxis_delta = 0
-
 sum_time_delta = 0
 
 json.array!(@data_points.to_a) do |data_point|
 
 	# calculations
 	last_data_point ||= data_point
-
-	if data_point.time_delta.present? && data_point.time_delta != 0
-		time_delta = data_point.time_delta
-	else
-		time_delta = data_point.created_at.to_f - last_data_point.created_at.to_f
-	end
-	sum_time_delta = sum_time_delta + time_delta
-
-	acceleration_xaxis_delta = ( data_point.acceleration_xaxis - last_data_point.acceleration_xaxis )
-	acceleration_yaxis_delta = ( data_point.acceleration_yaxis - last_data_point.acceleration_yaxis )
-	acceleration_zaxis_delta = ( data_point.acceleration_zaxis - last_data_point.acceleration_zaxis )
-
-	acceleration_xaxis_delta_sum += acceleration_xaxis_delta
-	acceleration_yaxis_delta_sum += acceleration_yaxis_delta
-	acceleration_zaxis_delta_sum += acceleration_zaxis_delta
-
-	corner_xaxis = ( last_acceleration_xaxis_delta > 0 && acceleration_xaxis_delta < 0 ) || ( last_acceleration_xaxis_delta < 0 && acceleration_xaxis_delta > 0 )
-	corner_yaxis = ( last_acceleration_yaxis_delta > 0 && acceleration_yaxis_delta < 0 ) || ( last_acceleration_yaxis_delta < 0 && acceleration_yaxis_delta > 0 )
-	corner_zaxis = ( last_acceleration_zaxis_delta > 0 && acceleration_zaxis_delta < 0 ) || ( last_acceleration_zaxis_delta < 0 && acceleration_zaxis_delta > 0 )
+	sum_time_delta = sum_time_delta + data_point.time_delta
 
 
 	# JSON
@@ -48,7 +22,7 @@ json.array!(@data_points.to_a) do |data_point|
 	json.time data_point.time
 
 	json.timestamp data_point.created_at.to_f
-	json.time_delta time_delta
+	json.time_delta data_point.time_delta
 	json.sum_time_delta sum_time_delta
 
 	json.acceleration_xaxis_delta data_point.acceleration_xaxis_delta
