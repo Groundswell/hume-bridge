@@ -52,7 +52,4 @@ json.array!(@data_points.to_a) do |data_point|
 	json.acceleration_zaxis_corner data_point.acceleration_zaxis_corner
 
 	last_data_point = data_point
-	last_acceleration_xaxis_delta = acceleration_xaxis_delta
-	last_acceleration_yaxis_delta = acceleration_yaxis_delta
-	last_acceleration_zaxis_delta = acceleration_zaxis_delta
 end
