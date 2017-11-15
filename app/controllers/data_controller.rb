@@ -23,6 +23,8 @@ class DataController < ActionController::Base
 					attrs[:logged_at] = DateTime.parse( attrs[:logged_at] )
 				elsif data_point_attributes[:timestamp].present?
 					attrs[:logged_at] = Time.at( data_point_attributes[:timestamp].to_f )
+				elsif data_point_attributes[:time_start].present?
+					attrs[:logged_at] = Time.at( data_point_attributes[:time_start].to_f )
 				end
 
 				worker.add(attrs)

@@ -47,13 +47,13 @@
 				paper.view.draw();
 
 				function draw_data_point( data_point ) {
-					acceleration_last_point = acceleration_last_point.add([ data_point['delta_acceleration_'+dim_left+'axis'] * 100, data_point['delta_acceleration_'+dim_bottom+'axis'] * 100 ])
+					acceleration_last_point = acceleration_last_point.add([ data_point['acceleration_'+dim_left+'axis_delta'] * 100, data_point['acceleration_'+dim_bottom+'axis_delta'] * 100 ])
 					acceleration_path.lineTo(acceleration_last_point);
 
-					sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'], data_point['sum_delta_acceleration_'+dim_bottom+'axis'] ])
+					sum_acceleration_last_point = sum_acceleration_last_point.add([ data_point['acceleration_'+dim_left+'axis_delta_sum'], data_point['acceleration_'+dim_bottom+'axis_delta_sum'] ])
 					sum_acceleration_path.lineTo(sum_acceleration_last_point);
 
-					velocity_last_point = velocity_last_point.add([ data_point['sum_delta_acceleration_'+dim_left+'axis'] * data_point.time_delta, data_point['sum_delta_acceleration_'+dim_bottom+'axis'] * data_point.time_delta ])
+					velocity_last_point = velocity_last_point.add([ data_point['acceleration_'+dim_left+'axis_delta_sum'] * data_point.time_delta, data_point['acceleration_'+dim_bottom+'axis_delta_sum'] * data_point.time_delta ])
 					velocity_path.lineTo(velocity_last_point);
 				}
 

@@ -8,13 +8,13 @@ last_corner_xzaxis = nil
 last_corner_xyaxis = nil
 last_corner_yzaxis = nil
 
-sum_delta_acceleration_xaxis = 0
-sum_delta_acceleration_yaxis = 0
-sum_delta_acceleration_zaxis = 0
+acceleration_xaxis_delta_sum = 0
+acceleration_yaxis_delta_sum = 0
+acceleration_zaxis_delta_sum = 0
 
-last_delta_acceleration_xaxis = 0
-last_delta_acceleration_yaxis = 0
-last_delta_acceleration_zaxis = 0
+last_acceleration_xaxis_delta = 0
+last_acceleration_yaxis_delta = 0
+last_acceleration_zaxis_delta = 0
 
 sum_time_delta = 0
 
@@ -30,28 +30,28 @@ json.array!(@data_points.to_a) do |data_point|
 	end
 	sum_time_delta = sum_time_delta + time_delta
 
-	delta_acceleration_xaxis = ( data_point.acceleration_xaxis - last_data_point.acceleration_xaxis )
-	delta_acceleration_yaxis = ( data_point.acceleration_yaxis - last_data_point.acceleration_yaxis )
-	delta_acceleration_zaxis = ( data_point.acceleration_zaxis - last_data_point.acceleration_zaxis )
+	acceleration_xaxis_delta = ( data_point.acceleration_xaxis - last_data_point.acceleration_xaxis )
+	acceleration_yaxis_delta = ( data_point.acceleration_yaxis - last_data_point.acceleration_yaxis )
+	acceleration_zaxis_delta = ( data_point.acceleration_zaxis - last_data_point.acceleration_zaxis )
 
-	sum_delta_acceleration_xaxis += delta_acceleration_xaxis
-	sum_delta_acceleration_yaxis += delta_acceleration_yaxis
-	sum_delta_acceleration_zaxis += delta_acceleration_zaxis
+	acceleration_xaxis_delta_sum += acceleration_xaxis_delta
+	acceleration_yaxis_delta_sum += acceleration_yaxis_delta
+	acceleration_zaxis_delta_sum += acceleration_zaxis_delta
 
-	corner_xaxis = ( last_delta_acceleration_xaxis > 0 && delta_acceleration_xaxis < 0 ) || ( last_delta_acceleration_xaxis < 0 && delta_acceleration_xaxis > 0 )
-	corner_yaxis = ( last_delta_acceleration_yaxis > 0 && delta_acceleration_yaxis < 0 ) || ( last_delta_acceleration_yaxis < 0 && delta_acceleration_yaxis > 0 )
-	corner_zaxis = ( last_delta_acceleration_zaxis > 0 && delta_acceleration_zaxis < 0 ) || ( last_delta_acceleration_zaxis < 0 && delta_acceleration_zaxis > 0 )
+	corner_xaxis = ( last_acceleration_xaxis_delta > 0 && acceleration_xaxis_delta < 0 ) || ( last_acceleration_xaxis_delta < 0 && acceleration_xaxis_delta > 0 )
+	corner_yaxis = ( last_acceleration_yaxis_delta > 0 && acceleration_yaxis_delta < 0 ) || ( last_acceleration_yaxis_delta < 0 && acceleration_yaxis_delta > 0 )
+	corner_zaxis = ( last_acceleration_zaxis_delta > 0 && acceleration_zaxis_delta < 0 ) || ( last_acceleration_zaxis_delta < 0 && acceleration_zaxis_delta > 0 )
 
-	major_corner_xyaxis ||= corner_xaxis && last_corner_xyaxis && ( (sum_delta_acceleration_xaxis - last_corner_xyaxis[:x]) / (sum_delta_acceleration_yaxis - last_corner_xyaxis[:y]) ).abs > 0.6
-	major_corner_xyaxis ||= corner_yaxis && last_corner_xyaxis && ( (sum_delta_acceleration_yaxis - last_corner_xyaxis[:y]) / (sum_delta_acceleration_xaxis - last_corner_xyaxis[:x]) ).abs > 0.6
-	major_corner_xzaxis ||= corner_xaxis && last_corner_xzaxis && ( (sum_delta_acceleration_xaxis - last_corner_xzaxis[:x]) / (sum_delta_acceleration_zaxis - last_corner_xzaxis[:z]) ).abs > 0.6
-	major_corner_xzaxis ||= corner_zaxis && last_corner_xzaxis && ( (sum_delta_acceleration_zaxis - last_corner_xzaxis[:z]) / (sum_delta_acceleration_xaxis - last_corner_xzaxis[:x]) ).abs > 0.6
-	major_corner_yzaxis ||= corner_yaxis && last_corner_yzaxis && ( (sum_delta_acceleration_yaxis - last_corner_yzaxis[:x]) / (sum_delta_acceleration_zaxis - last_corner_yzaxis[:z]) ).abs > 0.6
-	major_corner_yzaxis ||= corner_zaxis && last_corner_yzaxis && ( (sum_delta_acceleration_zaxis - last_corner_yzaxis[:z]) / (sum_delta_acceleration_yaxis - last_corner_yzaxis[:x]) ).abs > 0.6
+	major_corner_xyaxis ||= corner_xaxis && last_corner_xyaxis && ( (acceleration_xaxis_delta_sum - last_corner_xyaxis[:x]) / (acceleration_yaxis_delta_sum - last_corner_xyaxis[:y]) ).abs > 0.6
+	major_corner_xyaxis ||= corner_yaxis && last_corner_xyaxis && ( (acceleration_yaxis_delta_sum - last_corner_xyaxis[:y]) / (acceleration_xaxis_delta_sum - last_corner_xyaxis[:x]) ).abs > 0.6
+	major_corner_xzaxis ||= corner_xaxis && last_corner_xzaxis && ( (acceleration_xaxis_delta_sum - last_corner_xzaxis[:x]) / (acceleration_zaxis_delta_sum - last_corner_xzaxis[:z]) ).abs > 0.6
+	major_corner_xzaxis ||= corner_zaxis && last_corner_xzaxis && ( (acceleration_zaxis_delta_sum - last_corner_xzaxis[:z]) / (acceleration_xaxis_delta_sum - last_corner_xzaxis[:x]) ).abs > 0.6
+	major_corner_yzaxis ||= corner_yaxis && last_corner_yzaxis && ( (acceleration_yaxis_delta_sum - last_corner_yzaxis[:x]) / (acceleration_zaxis_delta_sum - last_corner_yzaxis[:z]) ).abs > 0.6
+	major_corner_yzaxis ||= corner_zaxis && last_corner_yzaxis && ( (acceleration_zaxis_delta_sum - last_corner_yzaxis[:z]) / (acceleration_yaxis_delta_sum - last_corner_yzaxis[:x]) ).abs > 0.6
 
-	last_corner_xzaxis = last_corner_xyaxis = last_corner_xaxis = { x: sum_delta_acceleration_xaxis, y: sum_delta_acceleration_yaxis, z: sum_delta_acceleration_zaxis  } if corner_xaxis
-	last_corner_yzaxis = last_corner_xyaxis = last_corner_yaxis = { x: sum_delta_acceleration_xaxis, y: sum_delta_acceleration_yaxis, z: sum_delta_acceleration_zaxis  } if corner_yaxis
-	last_corner_yzaxis = last_corner_xzaxis = last_corner_zaxis = { x: sum_delta_acceleration_xaxis, y: sum_delta_acceleration_yaxis, z: sum_delta_acceleration_zaxis  } if corner_zaxis
+	last_corner_xzaxis = last_corner_xyaxis = last_corner_xaxis = { x: acceleration_xaxis_delta_sum, y: acceleration_yaxis_delta_sum, z: acceleration_zaxis_delta_sum  } if corner_xaxis
+	last_corner_yzaxis = last_corner_xyaxis = last_corner_yaxis = { x: acceleration_xaxis_delta_sum, y: acceleration_yaxis_delta_sum, z: acceleration_zaxis_delta_sum  } if corner_yaxis
+	last_corner_yzaxis = last_corner_xzaxis = last_corner_zaxis = { x: acceleration_xaxis_delta_sum, y: acceleration_yaxis_delta_sum, z: acceleration_zaxis_delta_sum  } if corner_zaxis
 
 
 
@@ -73,13 +73,13 @@ json.array!(@data_points.to_a) do |data_point|
 	json.time_delta time_delta
 	json.sum_time_delta sum_time_delta
 
-	json.delta_acceleration_xaxis delta_acceleration_xaxis
-	json.delta_acceleration_yaxis delta_acceleration_yaxis
-	json.delta_acceleration_zaxis delta_acceleration_zaxis
+	json.acceleration_xaxis_delta acceleration_xaxis_delta
+	json.acceleration_yaxis_delta acceleration_yaxis_delta
+	json.acceleration_zaxis_delta acceleration_zaxis_delta
 
-	json.sum_delta_acceleration_xaxis sum_delta_acceleration_xaxis
-	json.sum_delta_acceleration_yaxis sum_delta_acceleration_yaxis
-	json.sum_delta_acceleration_zaxis sum_delta_acceleration_zaxis
+	json.acceleration_xaxis_delta_sum acceleration_xaxis_delta_sum
+	json.acceleration_yaxis_delta_sum acceleration_yaxis_delta_sum
+	json.acceleration_zaxis_delta_sum acceleration_zaxis_delta_sum
 
 	json.acceleration_xaxis data_point.acceleration_xaxis
 	json.acceleration_yaxis data_point.acceleration_yaxis
@@ -106,7 +106,7 @@ json.array!(@data_points.to_a) do |data_point|
 	json.major_corner_zyaxis major_corner_yzaxis
 
 	last_data_point = data_point
-	last_delta_acceleration_xaxis = delta_acceleration_xaxis
-	last_delta_acceleration_yaxis = delta_acceleration_yaxis
-	last_delta_acceleration_zaxis = delta_acceleration_zaxis
+	last_acceleration_xaxis_delta = acceleration_xaxis_delta
+	last_acceleration_yaxis_delta = acceleration_yaxis_delta
+	last_acceleration_zaxis_delta = acceleration_zaxis_delta
 end
