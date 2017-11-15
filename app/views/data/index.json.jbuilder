@@ -51,13 +51,13 @@ json.array!(@data_points.to_a) do |data_point|
 	json.time_delta time_delta
 	json.sum_time_delta sum_time_delta
 
-	json.acceleration_xaxis_delta acceleration_xaxis_delta
-	json.acceleration_yaxis_delta acceleration_yaxis_delta
-	json.acceleration_zaxis_delta acceleration_zaxis_delta
+	json.acceleration_xaxis_delta data_point.acceleration_xaxis_delta
+	json.acceleration_yaxis_delta data_point.acceleration_yaxis_delta
+	json.acceleration_zaxis_delta data_point.acceleration_zaxis_delta
 
-	json.acceleration_xaxis_delta_sum acceleration_xaxis_delta_sum
-	json.acceleration_yaxis_delta_sum acceleration_yaxis_delta_sum
-	json.acceleration_zaxis_delta_sum acceleration_zaxis_delta_sum
+	json.acceleration_xaxis_delta_sum data_point.acceleration_xaxis_delta_sum
+	json.acceleration_yaxis_delta_sum data_point.acceleration_yaxis_delta_sum
+	json.acceleration_zaxis_delta_sum data_point.acceleration_zaxis_delta_sum
 
 	json.acceleration_xaxis data_point.acceleration_xaxis
 	json.acceleration_yaxis data_point.acceleration_yaxis
@@ -73,9 +73,9 @@ json.array!(@data_points.to_a) do |data_point|
 	json.angle_yaxis data_point.angle_yaxis
 	json.angle_zaxis data_point.angle_zaxis
 
-	json.acceleration_xaxis_corner corner_xaxis
-	json.acceleration_yaxis_corner corner_yaxis
-	json.acceleration_zaxis_corner corner_zaxis
+	json.acceleration_xaxis_corner data_point.acceleration_xaxis_corner
+	json.acceleration_yaxis_corner data_point.acceleration_yaxis_corner
+	json.acceleration_zaxis_corner data_point.acceleration_zaxis_corner
 
 	last_data_point = data_point
 	last_acceleration_xaxis_delta = acceleration_xaxis_delta
