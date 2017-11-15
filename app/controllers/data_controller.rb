@@ -3,7 +3,7 @@ class DataController < ActionController::Base
 	def create
 		render plain: 'Create OK', layout: false, status: 200
 
-		property_names = [ 'device_name', 'device_id', 'logged_at', 'time_delta', 'date', 'time', 'acceleration_xaxis', 'acceleration_yaxis', 'acceleration_zaxis', 'angular_velocity_xaxis', 'angular_velocity_yaxis', 'angular_velocity_zaxis', 'angle_xaxis', 'angle_yaxis', 'angle_zaxis', 'time_start', 'acceleration_xaxis_delta', 'acceleration_yaxis_delta', 'acceleration_zaxis_delta', 'acceleration_xaxis_delta_sum', 'acceleration_yaxis_delta_sum', 'acceleration_zaxis_delta_sum', 'acceleration_xaxis_corner', 'acceleration_yaxis_corner', 'acceleration_zaxis_corner' ]
+		property_names = [ 'device_name', 'device_id', 'logged_at', 'time_delta', 'date', 'time', 'acceleration_xaxis', 'acceleration_yaxis', 'acceleration_zaxis', 'angular_velocity_xaxis', 'angular_velocity_yaxis', 'angular_velocity_zaxis', 'angle_xaxis', 'angle_yaxis', 'angle_zaxis', 'acceleration_xaxis_delta', 'acceleration_yaxis_delta', 'acceleration_zaxis_delta', 'acceleration_xaxis_delta_sum', 'acceleration_yaxis_delta_sum', 'acceleration_zaxis_delta_sum', 'acceleration_xaxis_corner', 'acceleration_yaxis_corner', 'acceleration_zaxis_corner' ]
 
 
 		data_points_attributes = params[:_json]
@@ -24,8 +24,12 @@ class DataController < ActionController::Base
 					attrs[:logged_at] = DateTime.parse( attrs[:logged_at] )
 				elsif data_point_attributes[:timestamp].present?
 					attrs[:logged_at] = Time.at( data_point_attributes[:timestamp].to_f )
-				elsif data_point_attributes[:time_start].present?
-					attrs[:logged_at] = Time.at( data_point_attributes[:time_start].to_f )
+				elsif data_point_attributes[:time_now].present?
+					attrs[:logged_at] = Time.at( data_point_attributes[:time_now].to_f )
+				end
+
+				if data_point_attributes[:time_start].present?
+					attrs[:time_start] = Time.at( data_point_attributes[:time_start].to_f )
 				end
 
 				worker.add(attrs)
