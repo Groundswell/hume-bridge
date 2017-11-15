@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171110074800) do
+ActiveRecord::Schema.define(version: 20171114202000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,12 +32,26 @@ ActiveRecord::Schema.define(version: 20171110074800) do
     t.text     "raw_data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "tags",                   default: [], array: true
+    t.string   "tags",                         default: [],    array: true
     t.datetime "logged_at"
     t.float    "time_delta"
+    t.datetime "time_start"
+    t.float    "acceleration_xaxis_delta"
+    t.float    "acceleration_yaxis_delta"
+    t.float    "acceleration_zaxis_delta"
+    t.float    "acceleration_xaxis_delta_sum"
+    t.float    "acceleration_yaxis_delta_sum"
+    t.float    "acceleration_zaxis_delta_sum"
+    t.boolean  "acceleration_xaxis_corner",    default: false
+    t.boolean  "acceleration_yaxis_corner",    default: false
+    t.boolean  "acceleration_zaxis_corner",    default: false
+    t.index ["acceleration_xaxis_corner"], name: "index_data_points_on_acceleration_xaxis_corner", using: :btree
+    t.index ["acceleration_yaxis_corner"], name: "index_data_points_on_acceleration_yaxis_corner", using: :btree
+    t.index ["acceleration_zaxis_corner"], name: "index_data_points_on_acceleration_zaxis_corner", using: :btree
     t.index ["device_id", "id"], name: "index_data_points_on_device_id_and_id", using: :btree
     t.index ["logged_at"], name: "index_data_points_on_logged_at", using: :btree
     t.index ["tags"], name: "index_data_points_on_tags", using: :gin
+    t.index ["time_start"], name: "index_data_points_on_time_start", using: :btree
   end
 
 end
