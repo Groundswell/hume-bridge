@@ -82,7 +82,7 @@
 				}
 
 				function fetch_data() {
-					var since = ''
+					var since = '#{params[:since]}'
 					if ( last_data_point ) since = last_data_point.id
 
 					var url = "#{raw data_path( params.permit( :dims, :limit, :device_id, :logged_since_seconds_ago ).merge( format: :json, tags: params[:tags] ) )}&since="+since
